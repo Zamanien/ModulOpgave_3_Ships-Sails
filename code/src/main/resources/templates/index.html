@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+
+    <!-- Bootstrap: Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" >
+
+    <!-- Font Awesome -->
+    <script defer th:src="@{fontawesome-free-5.8.1-web/js/all.js}"></script> <!--load all styles -->
+
+    <link rel="stylesheet" th:href="@{/css/css.css}" media="screen" charset="utf-8">
+
+    <title>Ships & Sails</title>
+  </head>
+  <body>
+    <div class='container-fluid'>
+      <div class='row vertical-align'>
+
+        <section class='col-md-6 offset-md-3'>
+          
+          <h1 class='text-center'>Ships & Sails</h1>
+        </section>
+
+        <section class='col-md-6 offset-md-4'>
+          <img th:src="@{/img/1-HMS-Bounty.jpg}" class='img-responsive' alt=""/>
+
+          <!-- <audio id="myAudio" controls> -->
+          <!--   <source th:src="@{out.opus}" type="audio/ogg"> -->
+          <!--   <p>Your browser doesn't support HTML5 audio. Please upgrade, Sailor!</p> -->
+          <!-- </audio> -->
+        </section>
+
+        <!-- Controllable testing boat -->
+        <section class='col-md-6 offset-md-4'>
+          <img id='testship' th:src="@{/img/advanced_test_ship.png}" class='img-responsive' alt=""/>
+
+          <!-- <audio id="myAudio" controls> -->
+          <!--   <source th:src="@{out.opus}" type="audio/ogg"> -->
+          <!--   <p>Your browser doesn't support HTML5 audio. Please upgrade, Sailor!</p> -->
+          <!-- </audio> -->
+        </section>
+
+        <section id='buttons' class='col-md-6 offset-md-3 text-center'>
+          <button id='music-button' class'btn'>Mute music</button>
+          <button id='sfx-button' class'btn'>Mute sounds</button>
+          <button id='end-turn' class'btn'>End turn</button>
+        </section>
+
+        <section id='arrow-controls' class='col-md-6 offset-md-3 text-center'>
+          <!-- Surrounded by empty spans to capture click events that otherwise won't work trivially as the spans are made into SVGs-->
+          <span id='move-arrow'><span class='fas fa-arrow-circle-up'></span></span><br/>
+          <span id='turn-clockwise'><span class="fas fa-undo"></span></span>
+          <span id='turn-counter-clockwise'><span class="fas fa-redo"></span></span>
+        </section>
+
+      </div>
+
+    </div>
+
+    <script th:src='@{js/js.js}' charset="utf-8">
+    </script>
+  </body>
+</html>
