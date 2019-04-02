@@ -23,6 +23,8 @@ public class Board {
         if (orientation == "NW") {}
       }
     }
+    // TODO: Just a temporary placeholder until this method is finished, so it compiles
+    return false;
   }
 
   // Called when an arrow is clicked OR a ship is selected
