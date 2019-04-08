@@ -4,48 +4,78 @@
 }
 
 body {
-  background: #ccccff;
+  /*background: #ccccff;*/
+  background: #335577;
+  /* background: #e4290a; */
+  /* background: #c61315;  /1* Nightmare mode *1/ */
+  color: #ddd;
   font-family: pirates, sans-serif;
-  margin: 150px 20px;
+  margin: 0px 20px;
 }
 
 h1 {
-  font-size: 90px;
+  font-size: 80px;
 }
 
-.vertical-align {
-    display: flex;
-    align-items: center;
+#menu {
+  margin-top: 15px;
+  margin-left: -4px;
+  position: absolute;
 }
 
-#buttons {
-  margin-top: 30px;
-  font-size: 25px;
-}
+/* Buttons */
 
-#arrow-controls {
+.buttons span {
   font-size: 35px;
-}
-
-#arrow-controls svg {
   cursor: pointer;
 }
 
-#rotate-left {
+#turn-counter-clockwise, #change-ammunition-ball, #change-ammunition-chain {
   margin-right: 30px;
-}
-
-/* Ships */
-
-#testship {
-  position: absolute;
-  transition: all 2s;
-  /* Actually positioned via JS */
-  z-index: 3;
 }
 
 #move-arrow {
   font-size: 50px;
+}
+
+.ammunition {
+  margin-top: 15px;
+}
+
+
+/* Tile(s) */
+
+#tiles {
+  margin-top: 100px;
+}
+
+.basic-tile {
+  background: url('../img/basic_tile.svg');
+  /* background: url('../img/easter2_tile.svg'); /1* Nightmare mode *1/ */
+  background-size: 139px 120px;
+  position: absolute;
+  width:  139px;
+  height: 120px;
+}
+
+/* Ships */
+
+.ship-of-the-line {
+  background-image: url("../img/advanced_test_ship.png");
+  background-repeat: no-repeat;
+  background-position: 0px -100px; /* Default position, facing left */
+  height: 85px;
+  width: 80px;
+  position: absolute;
+  /* Actually positioned via JS */
+  transition: transform 2s, border 0s, left 2s, top 2s;
+  z-index: 2;
+}
+
+.ship-selected {
+  border-radius: 5px;
+  /* box-shadow: 10px 10px; */
+  border: 3px dashed #ccc;
 }
 
 .ship-left {

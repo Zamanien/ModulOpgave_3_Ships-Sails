@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
   <head>
 
     <!-- Bootstrap: Required meta tags -->
@@ -16,52 +17,77 @@
 
     <title>Ships & Sails</title>
   </head>
+
+
   <body>
+        <section id='menu'>
+          <button id='music-button' class'btn'>Toggle music</button>
+          <button id='sfx-button' class'btn'>Toggle sound effects</button>
+          <button id='end-turn' class'btn'>End turn</button>
+          <a href="/"><button id='exit-game' class'btn'>Exit to menu</button></a>
+        </section>
+
     <div class='container-fluid'>
-      <div class='row vertical-align'>
+      <div class='row'>
 
         <section class='col-md-6 offset-md-3'>
           
           <h1 class='text-center'>Ships & Sails</h1>
         </section>
+      </div>
 
-        <section class='col-md-6 offset-md-4'>
-          <img th:src="@{/img/1-HMS-Bounty.jpg}" class='img-responsive' alt=""/>
 
-          <!-- <audio id="myAudio" controls> -->
-          <!--   <source th:src="@{out.opus}" type="audio/ogg"> -->
-          <!--   <p>Your browser doesn't support HTML5 audio. Please upgrade, Sailor!</p> -->
-          <!-- </audio> -->
+      <div class='row'>
+        <section id='tiles' class='col-md-6 offset-md-3'>
+          <!-- All tiles and ships are spawned in here -->
+          <!-- Test tile -->
+          <!-- <div class='basic-tile'></div> -->
+
+          <!-- Controllable testing boats -->
+          <!-- <div id='testship1' class='ship'/></div> --> 
+
+          <section id='ships'><!-- All ships are spawned in here --></section>
+
         </section>
+      </div>
 
-        <!-- Controllable testing boat -->
-        <section class='col-md-6 offset-md-4'>
-          <img id='testship' th:src="@{/img/advanced_test_ship.png}" class='img-responsive' alt=""/>
 
-          <!-- <audio id="myAudio" controls> -->
-          <!--   <source th:src="@{out.opus}" type="audio/ogg"> -->
-          <!--   <p>Your browser doesn't support HTML5 audio. Please upgrade, Sailor!</p> -->
-          <!-- </audio> -->
-        </section>
-
-        <section id='buttons' class='col-md-6 offset-md-3 text-center'>
-          <button id='music-button' class'btn'>Mute music</button>
-          <button id='sfx-button' class'btn'>Mute sounds</button>
-          <button id='end-turn' class'btn'>End turn</button>
-        </section>
-
-        <section id='arrow-controls' class='col-md-6 offset-md-3 text-center'>
+      <div class='row'>
+        <section id='arrow-controls' class='col-md-12 text-center buttons'>
           <!-- Surrounded by empty spans to capture click events that otherwise won't work trivially as the spans are made into SVGs-->
           <span id='move-arrow'><span class='fas fa-arrow-circle-up'></span></span><br/>
-          <span id='turn-clockwise'><span class="fas fa-undo"></span></span>
-          <span id='turn-counter-clockwise'><span class="fas fa-redo"></span></span>
+          <span id='turn-counter-clockwise'><span class="fas fa-undo"></span></span>
+          <span id='turn-clockwise'><span class="fas fa-redo"></span></span>
         </section>
+      </div>
 
+
+      <div class='row'>
+        <section class='col-md-6 offset-md-3 text-center buttons'>
+
+          <span id='attack' title='Attack'> 
+            <!-- Note SVG color is hardcoded here! -->
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="44" height="44" viewBox="0 0 24 24">
+              <path style="fill:#dddddd;" d="M6.2,2.44L18.1,14.34L20.22,12.22L21.63,13.63L19.16,16.1L22.34,19.28C22.73,19.67 22.73,20.3 22.34,20.69L21.63,21.4C21.24,21.79 20.61,21.79 20.22,21.4L17,18.23L14.56,20.7L13.15,19.29L15.27,17.17L3.37,5.27V2.44H6.2M15.89,10L20.63,5.26V2.44H17.8L13.06,7.18L15.89,10M10.94,15L8.11,12.13L5.9,14.34L3.78,12.22L2.37,13.63L4.84,16.1L1.66,19.29C1.27,19.68 1.27,20.31 1.66,20.7L2.37,21.41C2.76,21.8 3.39,21.8 3.78,21.41L7,18.23L9.44,20.7L10.85,19.29L8.73,17.17L10.94,15Z" />
+            </svg>
+          </span>
+
+        </section>
+      </div>
+
+
+      <div class='row ammunition'>
+        <section class='col-md-6 offset-md-3 text-center buttons'>
+          <span id='change-ammunition-ball' title='Load cannonball'><span class='fas fa-bowling-ball'></span></span>
+          <span id='change-ammunition-chain' title='Load chainshot'><span class='fas fa-link'></span></span>
+          <span id='change-ammunition-grape' title='Load grapeshot'><span class='fas fa-lemon'></span></span>
+        </section>
       </div>
 
     </div>
 
     <script th:src='@{js/js.js}' charset="utf-8">
     </script>
+
   </body>
 </html>
