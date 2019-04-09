@@ -1,33 +1,54 @@
-DROP DATABASE IF EXISTS modulopgave3;
-CREATE DATABASE modulopgave3;
-USE modulopgave3;
+DROP DATABASE IF EXISTS shipsandsails;
+CREATE DATABASE shipsandsails;
+USE shipsandsails;
 
 /* The default CHARACTER SET should be utf8mb4 so it doesn't have to be specified for each table */
 
+CREATE TABLE nationality (
+  name VARCHAR(60) PRIMARY KEY
+);
+
+CREATE TABLE direction (
+  direction TINYINT PRIMARY KEY,
+  CHECK (direction BETWEEN 0 AND 5) -- matching the enum numbers, which are zero indexed
+);
+
 CREATE TABLE scenario (
-  nationality INT PRIMARY KEY AUTO_INCREMENT
+  name VARCHAR(60) PRIMARY KEY,  -- Name of the scenario, those shown at startup, to choose from
+  player1 VARCHAR(60) NOT NULL, -- The two nationalities facing off in this scenario
+  player2 VARCHAR(60) NOT NULL,
+  map_width INT NOT NULL,        -- The dimensions of the map (number of hexes)
+  map_height INT NOT NULL
+
+  FOREIGN KEY (player1) REFERENCES nationality (id),
+  FOREIGN KEY (player2) REFERENCES nationality (id)
 );
 
 CREATE TABLE ship_types (
-  id INT PRIMARY KEY,
-  number_of_sailors INT NOT NULL UNIQUE,
-  number_of_rows_of_guns INT NOT NULL UNIQUE,
-  hull_quality INT NOT NULL UNIQUE,
-  sail_quality INT NOT NULL UNIQUE,
-  sailors_start INT NOT NULL,
-  speed INT NOT NULL UNIQUE
+  name VARCHAR(60) PRIMARY KEY,
+  number_of_sailors INT NOT NULL,
+  number_of_rows_of_guns INT NOT NULL,
+  hull_quality INT NOT NULL,
+  sail_quality INT NOT NULL,
+  max_speed INT NOT NULL
 );
 
--- Describes the concrete ships in a scenario
+-- Describes the specific ships in a scenario
 CREATE TABLE ships (
-  name VARCHAR(60) PRIMARY KEY AUTO_INCREMENT,
-  type INT PRIMARY KEY AUTO_INCREMENT,
-  position_x INT NOT NULL UNIQUE,
-  position_y INT NOT NULL UNIQUE,
-  sailors INT NOT NULL UNIQUE,
-  direction CHAR(2) NOT NULL UNIQUE,
+  id INT PRIMARY KEY,
+  type INT NOT NULL,             -- the ship type
+  scenario VARCHAR(60) NOT NULL, -- What scenario does this ship belong to
+  nationality VARCHAR(60) NOT NULL,  -- Which player controls this ship
+  --name VARCHAR(60) UNIQUE,       -- Basically a custom name for the ship. Should these even be in the database, or just user configurable in java?
+  position_x INT NOT NULL,       -- Starting coordinates
+  position_y INT NOT NULL,
+--  sailors INT NOT NULL,        -- only relevant if one wants a ship to be able to start with a limited crew
+  direction TINYINT NOT NULL,    -- The direction it's facing at the start
 
-  FOREIGN KEY (direction) REFERENCES direction(direction)
+  FOREIGN KEY (scenario) REFERENCES scenario (name),
+  FOREIGN KEY (type) REFERENCES ship_types (name),
+  FOREIGN KEY (nationality) REFERENCES nationality (id),
+  FOREIGN KEY (direction) REFERENCES direction (direction)
 );
 
 /* CREATE TABLE order ( */
@@ -47,7 +68,3 @@ CREATE TABLE ships (
 
 /*   FOREIGN KEY (wind_direction) REFERENCES kommune(kommune_id), */
 /* ); */
-
-CREATE TABLE direction (
-  direction TINYINT PRIMARY KEY
-);
