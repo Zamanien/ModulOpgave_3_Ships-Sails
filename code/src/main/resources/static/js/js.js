@@ -12,16 +12,11 @@ var sfx_volume = 0.6
 // TODO: Programatically insert all ships from the array, rather than adding them manually in HTML and binding to them here
 // Ships need an ID as Java needs to be able to refer to it uniquely, and it cannot do so based off orientation or position as several ships of the same type may occupy the same space (after a collision).
 class Ship {
-  constructor(el, id, selected, x, y, position_left, position_top, orientation, type) {
+  constructor(el, id, x, y, orientation, type) {
     this.el = el
     this.id = id
-    this.selected = selected
-    // New location system
-    // Old location system
     this.x = x
     this.y = y
-    this.position_left = position_left
-    this.position_top = position_top
     this.orientation = orientation
     this.type = type
   }
@@ -36,15 +31,15 @@ class Tile {
 }
 
 // This is supposed to be what the ships look like when we receive them from Java. The element reference is missing at this point as it's generated in JS, say in place_ships.
-// TODO: Update to instead have/use a set of coordinates to the tile they're on. OR update to reference the tile they're on, fx. by array index
-const ship1 = new Ship( null, 1, false, 0, 2, 875, 0, 30, "ship-of-the-line" )
-const ship2 = new Ship( null, 2, false, 1, 3, 250, 120, 30, "ship-of-the-line" )
+// TODO: Update to instead have/use a set of coordinates of the tile they're on. OR update to reference the tile they're on, fx. by array index
+const ship1 = new Ship( null, 1, 1, 5, 30, "ship-of-the-line" )
+const ship2 = new Ship( null, 2, 1, 3, 30, "ship-of-the-line" )
 
 ships = [ship1, ship2]
 
-tiles = []
+tiles = [] // No tiles to begin with, populated by place_tiles
 
-// Default selected ship
+// Default selected ship is no ship
 ship = null
 
 
@@ -72,7 +67,6 @@ const sounds_affirmative = ['Hshpyes1.wav', 'Hshpyes2.wav', 'Hshpyes3.wav']
 /* Init */
 place_tiles()
 place_ships()
-//new_place_ships()
 
 
 
@@ -82,40 +76,40 @@ function place_tiles() {
   let tilesHTML = document.getElementById('tiles') // Get a reference to what will be the element surrounding all the tiles
   const width = 5                // 4 lower than the number of columns to make The number of columns to make
   const height = 3               // 2 lower than the total number of rows made
-  const tile_offset_width = 210  // Pretty much = the width of the tile
   const tile_offset_height = 121 // Pretty much = the height of the tile
+  const tile_offset_width = 210  // Pretty much = the width of the tile
 
   // Add the first set of tiles
-  for (var i = 0; i < width; i++) {
+  for (var w = 0; w < width; w++) {
 
-    for (var j = 0; j < height; j++) {
+    for (var h = 0; h < height; h++) {
       
       let div = document.createElement('div')
       div.classList.add('basic-tile')  // Add basic-tile class to the element
       tilesHTML.appendChild(div)       // Add HTML element to the page
-      tiles.push( new Tile(div, i,j) ) // Add tile to the tile array
-      div.style.top  += (j * tile_offset_height) + "px"
-      div.style.left += (i * tile_offset_width) + "px"
+      tiles.push( new Tile(div, h, w*2) ) // Add tile to the tile array: 0,0 - 0,2 - 0,4
+      div.style.top  += (h * tile_offset_height) + "px"
+      div.style.left += (w * tile_offset_width) + "px"
     }
 
   }
 
 
-  for (var i = 0; i < (width-1); i++) {
+  for (var w = 0; w < (width-1); w++) {
 
-    for (var j = 0; j < (height+1); j++) {
+    for (var h = 0; h < (height+1); h++) {
       
       let div = document.createElement('div')
       div.classList.add('basic-tile')
 
-      new_h = -60 
-      new_w = 105
+      new_h = -60 // Basically tile height / 2
+      new_w = 105 // Basically tile width / 2
 
       tilesHTML.appendChild(div)
-      tiles.push( new Tile(div, i,j) ) // Add tile to the tile array
+      tiles.push( new Tile(div, h, (w+1)*2-1) ) // Add tile to the tile array: 0,1 - 0,3 - 0,5
       
-      div.style.top  += new_h + (j * tile_offset_height) + "px"
-      div.style.left += new_w + (i * tile_offset_width) + "px"
+      div.style.top  += new_h + (h * tile_offset_height) + "px"
+      div.style.left += new_w + (w * tile_offset_width) + "px"
       // console.log(div.style.top)
       // console.log(div.style.left)
     }
@@ -132,36 +126,25 @@ function place_tiles() {
 // For setting up the match
 function place_ships() {
   let shipsHTML = document.getElementById('ships')
-  //<div id='testship1' class='ship'/></div> 
   for (aShip of ships) {
     let div = document.createElement('div')
     div.classList.add(aShip.type)   // I need to add a class so CSS knows which ship model it for selecting an image to show
     shipsHTML.appendChild(div)
     aShip.el = div // A reference to this particular ship is saved. TODO: Is this even possible?
 
-    // Rotate the ship properly and put it in its proper position on the map
+    // Rotate the ship properly 
     aShip.el.style.transform = "rotate(+" + o_offset + "deg)"; // TODO: The default rotation may vary per ship? Randomize it based off the orientations array? Basically this should be default_rotation + aShip.orientation
 
-    aShip.el.style.left = aShip.position_left + "px"
-    aShip.el.style.top  = aShip.position_top + "px"
-  }
-}
-
-function new_place_ships() {
-  let shipsHTML = document.getElementById('ships')
-  for (aShip of ships) {
-    let div = document.createElement('div')
-    div.classList.add(aShip.type)   // I need to add a class so CSS knows which ship model it for selecting an image to show
-    shipsHTML.appendChild(div)
-    aShip.el = div // A reference to this particular ship is saved. TODO: Is this even possible?
-
-    // Rotate the ship properly and put it in its proper position on the map
-    aShip.el.style.transform = "rotate(+" + o_offset + "deg)"; // TODO: The default rotation may vary per ship? Randomize it based off the orientations array? Basically this should be default_rotation + aShip.orientation
-
+    // Put the ship in its proper position on the map
     for (aTile of tiles) {
       if (aTile.x == aShip.x && aTile.y == aShip.y) {
-        aShip.el.style.left = aTile.position_left + "px"
-        aShip.el.style.top  = aTile.position_top + "px"
+        let cb = document.getElementById("tiles").getBoundingClientRect();
+        let coords = aTile.el.getBoundingClientRect();
+        // aShip.el.style.left = aTile.el.style.left
+        // aShip.el.style.top  = aTile.el.style.top
+        aShip.el.style.left = (coords.left - cb.left + 40) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
+        aShip.el.style.top  = (coords.top - cb.top) + "px"
+        break
       }
     }
   }
@@ -208,8 +191,7 @@ document.getElementById('ships').addEventListener('click', function(event) {
   ship_selection(event.target);
 });
 
-// TODO: Ideally this border should not rotate with the ship. Tried adding a surrounding div but it was somewhere else
-// TODO: Add event handler to all ships and set selected to true on the selected ship, and all others to false. Also add CSS border to selected ship to visually indicate which ship is selected?
+// TODO: Ideally this border should not rotate with the ship. Tried adding a surrounding div and putting a border on that but it was somewhere else (so i guess it would have to be moved as well, just not rotated?)
 // Also call functions for updating the turn/move buttons based off remaining moves/turns (request the info from Java)
 function ship_selection(clicked_ship) {
   // Now we have the ship element. Find the related ship object:
@@ -223,7 +205,7 @@ function ship_selection(clicked_ship) {
     }
   }
   play_sfx_ready()
-  // Maybe I can just deleted the "selected" attribute and simply do one thing: assign the global ship variable to whichever ship is the current one?
+  // Maybe I can just delete the "selected" attribute and simply do one thing: assign the global ship variable to whichever ship is the current one?
 }
 
 
@@ -256,15 +238,17 @@ function move() {
   play_sfx(sounds_affirmative)
 }
 
-  function turn_clockwise() {
-    if (ship.orientation != 330) ship.orientation += o_degrees
-    else ship.orientation = 30
-    // array_offset = orientations.indexOf(cur_orientation)
-    // if (array_offset == 5) offset = 0
-    // else offset = array_offset + 1
 
-    turn_visual("CW")
-  }
+function turn_clockwise() {
+  if (ship.orientation != 330) ship.orientation += o_degrees
+  else ship.orientation = 30
+  // array_offset = orientations.indexOf(cur_orientation)
+  // if (array_offset == 5) offset = 0
+  // else offset = array_offset + 1
+
+  turn_visual("CW")
+}
+
 
 // TODO: I think it would be easier to decouple the rotation as received from Java from the visual representation of the rotation, as chaging the latter might not mean changing the former
 function turn_visual(direction) {
@@ -280,6 +264,7 @@ function turn_visual(direction) {
   //   // Handle reflect and changing the image here.
   //   ship.el.classList.add('ship-right')
 }
+
 
 function turn_counter_clockwise() {
   // array_offset = orientations.indexOf(cur_orientation)
@@ -297,7 +282,7 @@ function turn_counter_clockwise() {
 
 
 
-/* Event handlers */
+/* Event bindings */
 
 // TODO: This should fire regardless of which ship is clicked? May be handled in method further up
 // ship.el.onclick = play_sfx_ready
