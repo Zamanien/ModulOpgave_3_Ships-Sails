@@ -1,13 +1,3 @@
-// MUSIC
-
-/* Auto-start background music */
-
-// const audio = new Audio('audio/music/5.opus')
-const audio = new Audio('audio/music/7.opus')
-audio.play()
-var sfx_muted = false
-var sfx_volume = 0.6
-
 
 // TODO: Programatically insert all ships from the array, rather than adding them manually in HTML and binding to them here
 // Ships need an ID as Java needs to be able to refer to it uniquely, and it cannot do so based off orientation or position as several ships of the same type may occupy the same space (after a collision).
@@ -30,18 +20,32 @@ class Tile {
   }
 }
 
+// Just a few test ships
 // This is supposed to be what the ships look like when we receive them from Java. The element reference is missing at this point as it's generated in JS, say in place_ships.
-// TODO: Update to instead have/use a set of coordinates of the tile they're on. OR update to reference the tile they're on, fx. by array index
 const ship1 = new Ship( null, 1, 1, 5, 30, "ship-of-the-line" )
 const ship2 = new Ship( null, 2, 1, 3, 30, "ship-of-the-line" )
 
 ships = [ship1, ship2]
 
-tiles = [] // No tiles to begin with, populated by place_tiles
 
-// Default selected ship is no ship
-ship = null
 
+/* SETTINGS */
+
+// Music
+
+/* Auto-start background music */
+
+// const audio = new Audio('audio/music/5.opus')
+const audio = new Audio('audio/music/7.opus')
+audio.play()
+var sfx_muted = false
+var sfx_volume = 0.6
+
+/* Tiles / World settings */
+
+const width = 5                // 4 lower than the number of columns to make The number of columns to make
+const height = 3               // 1 lower than the total number of tiles from top to bottom
+const t_width = width + 3      // Total width and heights, starting from 0
 
 /* Ship settings */
 
@@ -64,32 +68,37 @@ const base_path = 'audio/sfx/wc2v3/'
 const sounds_ready = ['Hshpredy.wav', 'Hshpwht1.wav', 'Hshpwht2.wav', 'Hshpwht3.wav']
 const sounds_affirmative = ['Hshpyes1.wav', 'Hshpyes2.wav', 'Hshpyes3.wav']
 
-/* Init */
+
+
+/* INIT */
+
+// Default selected ship is no ship. Defined out here to have the proper scope.
+ship = null
+tiles = [] // No tiles to begin with, populated by place_tiles
+
 place_tiles()
 place_ships()
-
 
 
 
 /* Methods */
 function place_tiles() {
   let tilesHTML = document.getElementById('tiles') // Get a reference to what will be the element surrounding all the tiles
-  const width = 5                // 4 lower than the number of columns to make The number of columns to make
-  const height = 3               // 2 lower than the total number of rows made
   const tile_offset_height = 121 // Pretty much = the height of the tile
   const tile_offset_width = 210  // Pretty much = the width of the tile
 
   // Add the first set of tiles
   for (var w = 0; w < width; w++) {
 
-    for (var h = 0; h < height; h++) {
+    for (var h = 0; h < height+1; h++) {
       
       let div = document.createElement('div')
       div.classList.add('basic-tile')  // Add basic-tile class to the element
       tilesHTML.appendChild(div)       // Add HTML element to the page
       tiles.push( new Tile(div, h, w*2) ) // Add tile to the tile array: 0,0 - 0,2 - 0,4
       div.style.top  += (h * tile_offset_height) + "px"
-      div.style.left += (w * tile_offset_width) + "px"
+      div.style.left += (w * tile_offset_width)  + "px"
+      // place_tile_coordinates((h * tile_offset_height), (w * tile_offset_width), h, w*2)
     }
 
   }
@@ -109,18 +118,29 @@ function place_tiles() {
       tiles.push( new Tile(div, h, (w+1)*2-1) ) // Add tile to the tile array: 0,1 - 0,3 - 0,5
       
       div.style.top  += new_h + (h * tile_offset_height) + "px"
-      div.style.left += new_w + (w * tile_offset_width) + "px"
-      // console.log(div.style.top)
-      // console.log(div.style.left)
+      div.style.left += new_w + (w * tile_offset_width)  + "px"
+      // place_tile_coordinates(new_h + (h * tile_offset_height), new_w + (w * tile_offset_width), h, (w+1)*2-1)
     }
 
   }
 
   // All these position: absolute element break out of the regular positioning flow and thus the parent element is much smaller than its children.
   // We can then either hardcode a height for the container that doesn't work if we change the number of rows of tiles, OR we can set the parent container's height via JS:
-  custom_adjustment = -50
-  tilesHTML.style.height =  (height + 1) * tile_offset_height + custom_adjustment + "px"
+  custom_adjustment = -80
+  tilesHTML.style.height =  (height + 2) * tile_offset_height + custom_adjustment + "px"
+}
 
+// Maybe just for debugging
+function place_tile_coordinates(tile_h, tile_w, x, y) {
+  let tilesHTML = document.getElementById('tiles') // Get a reference to what will be the element surrounding all the tiles
+  let div = document.createElement('div')
+  div.innerHTML = x + ", " + y
+  div.classList.add('tile-coordinate')
+  tilesHTML.appendChild(div)
+
+  let cb = document.getElementById("tiles").getBoundingClientRect();
+  div.style.top  = (tile_h - cb.top) + "px"
+  div.style.left = (tile_w - cb.left) + "px"
 }
 
 // For setting up the match
@@ -211,16 +231,68 @@ function ship_selection(clicked_ship) {
 
 /* Ship controls */
 
-// TODO: Direction N OR S -> Only update top 
-// Direction NW: -Up, -Left, 
-// Direction SW: +Up, -Left
-// Direction NE: -Up, +Left
-// Direction NW: +Up, +Left
 function move() {
+
+  // 30, 90, 150, 210, 270, 330
+
+  // if (on any border and facing the border):
+  // Over the edge checks
+  // If at the top or bottom of the map and facing one of those two directions respectively: Over the edge.
+  // For left and right there are 4 directions to check
+  if ( 
+    ( ship.orientation == 90 && ship.x == 0 || ship.orientation == 270 && ship.x == height)
+    || ( ship.orientation == 30 && (ship.y == 0 || ship.x == 0) )
+    || ( ship.orientation == 330 && (ship.y == 0) )
+    || ( ship.orientation == 210 && (ship.x == height || ship.y == t_width) )
+    || ( ship.orientation == 150 && (ship.y == 0 == t_width) )
+  ) {
+    move_over_edge()
+  }
+  // Moving within the board
+  else { 
+    // Updating orientations
+    if (ship.orientation == 30) {
+      ship.x--
+      ship.y--
+    }
+    else if (ship.orientation == 90) ship.x--
+    
+    else if (ship.orientation == 150) ship.y++
+    
+    else if (ship.orientation == 210) {
+      ship.x++
+      ship.y++
+    }
+    else if (ship.orientation == 270) ship.x++
+    else { // 330
+      ship.y--
+    }
+
+    // Moving based off updated coordinates. Almost verbatim copy of the "placing ships algorithm" (changed aShip to ship), so if all this works I should extract this to a method
+    for (aTile of tiles) {
+      if (aTile.x == ship.x && aTile.y == ship.y) {
+        let cb = document.getElementById("tiles").getBoundingClientRect();
+        let coords = aTile.el.getBoundingClientRect();
+        ship.el.style.left = (coords.left - cb.left + 40) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
+        ship.el.style.top  = (coords.top - cb.top) + "px"
+        break
+      }
+    }
+    
+  }
+
+  play_sfx(sounds_affirmative)
+}
+
+// Old move method, useful for moving outside of tiles, such as over the edge. TODO on 4 of the directions, though
+function move_over_edge() {
+  // We need to move it first for visuals' sake, but this is helpful for faster debugging
+  ship.el.parentElement.removeChild(ship.el) 
+  ship = null
+
   // Get current position
   curPosLeft = parseInt(ship.el.style.left)
   curPosTop = parseInt(ship.el.style.top)
-
 
   orientation = ship.el.style.transform
 
@@ -254,7 +326,6 @@ function turn_clockwise() {
 function turn_visual(direction) {
   cur_orientation = parseInt( ship.el.style.transform.match(/-?\d+/)[0] ) // NOTE: This works as long as I don't use transform for setting anything besides rotation. The last part extracts the first number from the string
 
-  console.log(cur_orientation)
   if (direction == "CW") {
     ship.el.style.transform = 'rotate(' + (cur_orientation + o_degrees) + 'deg)' // Originally I wanted to wrap back to zero once we got over 360 degrees, but then instead of rotating the shortest way round it rotates the long one...
   }
@@ -282,7 +353,7 @@ function turn_counter_clockwise() {
 
 
 
-/* Event bindings */
+/* EVENT BINDINGS */
 
 // TODO: This should fire regardless of which ship is clicked? May be handled in method further up
 // ship.el.onclick = play_sfx_ready

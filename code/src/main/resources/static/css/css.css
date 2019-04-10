@@ -58,6 +58,11 @@ h1 {
   height: 120px;
 }
 
+.tile-coordinate {
+  position: absolute;
+  z-index: 2;
+}
+
 /* Ships */
 
 .ship-of-the-line {
@@ -69,7 +74,7 @@ h1 {
   position: absolute;
   /* Actually positioned via JS */
   transition: transform 2s, border 0s, left 2s, top 2s;
-  z-index: 2;
+  z-index: 3;
 }
 
 .ship-selected {
