@@ -162,8 +162,8 @@ function place_ships() {
         let coords = aTile.el.getBoundingClientRect();
         // aShip.el.style.left = aTile.el.style.left
         // aShip.el.style.top  = aTile.el.style.top
-        aShip.el.style.left = (coords.left - cb.left + 40) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
-        aShip.el.style.top  = (coords.top - cb.top) + "px"
+        aShip.el.style.left = (coords.left - cb.left + 35) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
+        aShip.el.style.top  = (coords.top - cb.top + 20) + "px"
         break
       }
     }
@@ -232,6 +232,7 @@ function ship_selection(clicked_ship) {
 /* Ship controls */
 
 function move() {
+    even = (ship.y % 2)? true : false
 
   // 30, 90, 150, 210, 270, 330
 
@@ -239,47 +240,41 @@ function move() {
   // Over the edge checks
   // If at the top or bottom of the map and facing one of those two directions respectively: Over the edge.
   // For left and right there are 4 directions to check
-  if ( 
-    ( ship.orientation == 90 && ship.x == 0 || ship.orientation == 270 && ship.x == height)
-    || ( ship.orientation == 30 && (ship.y == 0 || ship.x == 0) )
-    || ( ship.orientation == 330 && (ship.y == 0) )
-    || ( ship.orientation == 210 && (ship.x == height || ship.y == t_width) )
-    || ( ship.orientation == 150 && (ship.y == 0 == t_width) )
-  ) {
-    move_over_edge()
-  }
   // Moving within the board
-  else { 
-    // Updating orientations
+    // Updating coordinates
     if (ship.orientation == 30) {
-      ship.x--
+      if (even) ship.x--
       ship.y--
-    }
+    }  // TODO: These algorithms are wrong! It's fx. not always +1 on both axes going south east, as x will be 0 going from an even to an odd row as it's currently tiled
     else if (ship.orientation == 90) ship.x--
     
-    else if (ship.orientation == 150) ship.y++
+    else if (ship.orientation == 150) {
+      if (even) ship.x--
+      ship.y++
+    }
     
     else if (ship.orientation == 210) {
-      ship.x++
+      if (!even) ship.x++
       ship.y++
     }
     else if (ship.orientation == 270) ship.x++
     else { // 330
+      if (!even) ship.x++
       ship.y--
     }
+
+    if (ship.x < 0 || ship.y < 0 || ship.x > height || ship.y > t_width) move_over_edge()
 
     // Moving based off updated coordinates. Almost verbatim copy of the "placing ships algorithm" (changed aShip to ship), so if all this works I should extract this to a method
     for (aTile of tiles) {
       if (aTile.x == ship.x && aTile.y == ship.y) {
         let cb = document.getElementById("tiles").getBoundingClientRect();
         let coords = aTile.el.getBoundingClientRect();
-        ship.el.style.left = (coords.left - cb.left + 40) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
-        ship.el.style.top  = (coords.top - cb.top) + "px"
+        ship.el.style.left = (coords.left - cb.left + 35) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
+        ship.el.style.top  = (coords.top - cb.top + 20) + "px"
         break
       }
     }
-    
-  }
 
   play_sfx(sounds_affirmative)
 }
@@ -310,6 +305,7 @@ function move_over_edge() {
   play_sfx(sounds_affirmative)
 }
 
+// TURNING
 
 function turn_clockwise() {
   if (ship.orientation != 330) ship.orientation += o_degrees
@@ -319,21 +315,6 @@ function turn_clockwise() {
   // else offset = array_offset + 1
 
   turn_visual("CW")
-}
-
-
-// TODO: I think it would be easier to decouple the rotation as received from Java from the visual representation of the rotation, as chaging the latter might not mean changing the former
-function turn_visual(direction) {
-  cur_orientation = parseInt( ship.el.style.transform.match(/-?\d+/)[0] ) // NOTE: This works as long as I don't use transform for setting anything besides rotation. The last part extracts the first number from the string
-
-  if (direction == "CW") {
-    ship.el.style.transform = 'rotate(' + (cur_orientation + o_degrees) + 'deg)' // Originally I wanted to wrap back to zero once we got over 360 degrees, but then instead of rotating the shortest way round it rotates the long one...
-  }
-  else {
-    ship.el.style.transform = 'rotate(' + (cur_orientation - o_degrees) + 'deg)'
-  }
-  //   // Handle reflect and changing the image here.
-  //   ship.el.classList.add('ship-right')
 }
 
 
@@ -350,6 +331,22 @@ function turn_counter_clockwise() {
   //ship.el.style.backgroundPosition = '0px -300px';
   //ship.el.classList.remove('ship-right')
 }
+
+
+// TODO: I think it would be easier to decouple the rotation as received from Java from the visual representation of the rotation, as chaging the latter might not mean changing the former
+function turn_visual(direction) {
+  cur_orientation = parseInt( ship.el.style.transform.match(/-?\d+/)[0] ) // NOTE: This works as long as I don't use transform for setting anything besides rotation. The last part extracts the first number from the string
+
+  if (direction == "CW") {
+    ship.el.style.transform = 'rotate(' + (cur_orientation + o_degrees) + 'deg)' // Originally I wanted to wrap back to zero once we got over 360 degrees, but then instead of rotating the shortest way round it rotates the long one...
+  }
+  else {
+    ship.el.style.transform = 'rotate(' + (cur_orientation - o_degrees) + 'deg)'
+  }
+  //   ship.el.classList.add('ship-right')
+}
+
+
 
 
 

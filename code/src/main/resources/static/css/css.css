@@ -68,8 +68,8 @@ h1 {
 .ship-of-the-line {
   background-image: url("../img/advanced_test_ship.png");
   background-repeat: no-repeat;
-  background-position: 0px -100px; /* Default position, facing left */
-  height: 85px;
+  background-position: 0px -120px; /* Default position, facing left */
+  height: 68px;
   width: 80px;
   position: absolute;
   /* Actually positioned via JS */
@@ -83,13 +83,27 @@ h1 {
   border: 3px dashed #ccc;
 }
 
+/* Rotation based images */
+
 .ship-left {
-  transform: scaleX(1); 
+  /* transform: scaleX(1); */ 
+  background-position: 0px -120px;
 }
 
 .ship-right {
-  transform: scaleX(-1);
+  /*transform: scaleX(-1);*/
+  background-position: 0px -220px;
 }
+
+.ship-up {
+  background-position: 0px -320px;
+}
+
+.ship-down {
+  background-position: 0px -20px;
+}
+
+
 
 
 
