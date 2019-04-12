@@ -6,31 +6,39 @@ public class Ship {
     private int shipType;
     private String nationality;
     private String name;
-    private int x;
-    private int y;
+    private Coordinate coordinate;
     private Direction direction; //ENUM, N, NE, SE, S, SW, NW
     private int speed; //change: speed last round +/- calculated change
-    private int hull_health; //0 - 100
-    private int sail_health; //0 - 100
+    private int hull_health; //0 - 100%
+    private int sail_health; //0 - 100%
     private int sailors; //0 - MAX_SAILORS
     private int load; //load time
+    private int currentAmmunitionType; //0=canonball, 1=chainball, 2=grapeshot
 
     public Ship() {
     }
 
-    public Ship(int shipId, int shipType, String nationality, String name, int x, int y, Direction direction, int speed, int hull_health, int sail_health, int load, int sailors) {
+    public Ship(int shipId, int shipType, String nationality, String name, Coordinate coordinate, Direction direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
         this.shipId = shipId;
         this.shipType = shipType;
         this.nationality = nationality;
         this.name = name;
-        this.x = x;
-        this.y = y;
+        this.coordinate = coordinate;
         this.direction = direction;
         this.speed = speed;
         this.hull_health = hull_health;
         this.sail_health = sail_health;
-        this.load = load;
         this.sailors = sailors;
+        this.load = load;
+        this.currentAmmunitionType = currentAmmunitionType;
+    }
+
+    public int getCurrentAmmunitionType() {
+        return currentAmmunitionType;
+    }
+
+    public void setCurrentAmmunitionType(int currentAmmunitionType) {
+        this.currentAmmunitionType = currentAmmunitionType;
     }
 
     public int getShipId() {
@@ -65,20 +73,12 @@ public class Ship {
         this.name = name;
     }
 
-    public int getX() {
-        return x;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 
     public Direction getDirection() {

@@ -1,0 +1,21 @@
+# Protokol for kommunikation mellem servere
+Ren text strøm
+
+Først sendes vejr (W:)
+Dernæst sendes alle skibe (S:)
+Til sidst sendes alle ordrer (O:)
+
+## Format exchangeWeather
+W:windDirection:windSpeed:
+END
+
+## Format exchangeOrder
+attributer på objekter sendes i den rækkefølge de er defineret i klassen
+
+S:liste af skibsattributer adskilt med :
+flyt- koordinater sendes som par af x, y afsluttet med EndCoordinate
+eks.
+1,1:2,1:2,2:EndCoordinate
+
+O:liste af ordreattributer adskilt med :
+END

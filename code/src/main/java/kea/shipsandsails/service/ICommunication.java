@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ICommunication {
     public boolean initComm(String ip); //returns true if server - use to determine if to send Weather
-    public void exchangeMovesAttacks(List<Ship> ships, List<Order> orders, Weather weather); //exchange orders and weather
-    public void exchangeAttackResolved(List<Ship> ships, List<Order> orders); //receive info on enemy surviving ships
+    public void exchangeWeather(Weather weather); //exchange weather - if server then decide weather, if client receive weather
+    public void exchangeOrders(List<Ship> ships, List<Order> orders); //exchange orders
+    public void exchangeAttackResolved(List<Ship> ships); //receive info on enemy surviving ships
 }
