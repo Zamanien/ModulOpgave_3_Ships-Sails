@@ -6,6 +6,7 @@
 body {
   /*background: #ccccff;*/
   background: #335577;
+  background: #284a6c;
   /* background: #e4290a; */
   /* background: #c61315;  /1* Nightmare mode *1/ */
   color: #ddd;
@@ -18,9 +19,10 @@ h1 {
 }
 
 #menu {
+  position: fixed;
   margin-top: 15px;
   margin-left: -4px;
-  position: absolute;
+  z-index: 2;
 }
 
 /* Buttons */
@@ -38,15 +40,30 @@ h1 {
   font-size: 50px;
 }
 
-.ammunition {
-  margin-top: 15px;
+#ammunition {
+  margin-bottom: 10px;
+}
+
+#left-pane {
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+  width 200px;
+}
+
+#controls {
+  margin-bottom: 175px;
+}
+
+h2 {
+  font-size: 25px;
 }
 
 
 /* Tile(s) */
 
 #tiles {
-  margin-top: 100px;
+  margin-top: 65px;
 }
 
 .basic-tile {
@@ -65,16 +82,35 @@ h1 {
 
 /* Ships */
 
-.ship-of-the-line {
-  background-image: url("../img/advanced_test_ship.png");
+/* Styling common to all ships */
+.ship {
   background-repeat: no-repeat;
-  background-position: 0px -120px; /* Default position, facing left */
-  height: 68px;
-  width: 80px;
   position: absolute;
   /* Actually positioned via JS */
-  transition: transform 2s, border 0s, left 2s, top 2s;
+  transition: transform 2s, border 0s, left 1.7s, top 1.7s;
   z-index: 3;
+}
+
+/* Styling differing between ship models */
+.ship-of-the-line {
+  background-image: url("../img/ship-of-the-line.png");
+  background-position: 0px -120px; /* Default position, facing left */
+  height: 88px;
+  width: 80px;
+}
+
+.brig {
+  background-image: url("../img/brig.png");
+  background-position: 0px -120px; /* Default position, facing left */
+  height: 88px;
+  width: 80px;
+}
+
+.man-at-war {
+  background-image: url("../img/man-at-war.png");
+  background-position: 0px -120px; /* Default position, facing left */
+  height: 88px;
+  width: 80px;
 }
 
 .ship-selected {
@@ -82,6 +118,7 @@ h1 {
   /* box-shadow: 10px 10px; */
   border: 3px dashed #ccc;
 }
+
 
 /* Rotation based images */
 
@@ -96,16 +133,22 @@ h1 {
 }
 
 .ship-up {
-  background-position: 0px -320px;
+  background-position: 0px -300px;
 }
 
 .ship-down {
-  background-position: 0px -20px;
+  background-position: 0px 0px;
 }
 
+/* Stat bars for sailors, hull */
+#stat-bars {
+  z-index: 2;
+}
 
-
-
+#stat-bars > div {
+  margin-bottom: 10px;
+  height: 1.5rem;
+}
 
 /* Main, server and client menues */
 
