@@ -2,7 +2,7 @@ package dk.kea.shipgame.Model;
 
 public class Weather {
     private Direction windDirection; //ENUM N, NE, SE, S, SW, NW
-    private int windSpeed; //0 - 5
+    private int windSpeed; //0 - 5 -- windSpeed is constant and not changing. 
 
     public Weather() {
     }
