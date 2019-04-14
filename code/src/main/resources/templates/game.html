@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+  <head>
+
+    <!-- Bootstrap: Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" >
+
+    <!-- Font Awesome -->
+    <script defer th:src="@{fontawesome-free-5.8.1-web/js/all.js}"></script> <!--load all styles -->
+
+    <link rel="stylesheet" th:href="@{/css/css.css}" media="screen" charset="utf-8">
+
+    <title>Ships & Sails</title>
+  </head>
+
+
+  <body>
+
+    <section id='menu'>
+      <button id='music-button' class'btn'>Toggle music</button>
+      <button id='sfx-button' class'btn'>Toggle sound effects</button>
+      <button id='end-turn' class'btn'>End turn</button>
+      <a href="/"><button id='exit-game' class'btn'>Exit to menu</button></a>
+    </section>
+
+
+          
+    <div id='left-pane' class='container-fluid'>
+      <div class='row'>
+        <div class='col-md-2'>
+
+          <div id='controls'>
+          
+            <section id='arrow-controls' class='text-center buttons'>
+              <!-- Surrounded by empty spans to capture click events that otherwise won't work trivially as the spans are made into SVGs-->
+              <span id='move-arrow'><span class='fas fa-arrow-circle-up'></span></span><br/>
+              <span id='turn-counter-clockwise'><span class="fas fa-undo"></span></span>
+              <span id='turn-clockwise'><span class="fas fa-redo"></span></span>
+            </section>
+
+
+            <section class='text-center buttons'>
+
+              <span id='attack' title='Attack'> 
+                <!-- Note SVG color is hardcoded here! -->
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="44" height="44" viewBox="0 0 24 24">
+                  <path style="fill:#dddddd;" d="M6.2,2.44L18.1,14.34L20.22,12.22L21.63,13.63L19.16,16.1L22.34,19.28C22.73,19.67 22.73,20.3 22.34,20.69L21.63,21.4C21.24,21.79 20.61,21.79 20.22,21.4L17,18.23L14.56,20.7L13.15,19.29L15.27,17.17L3.37,5.27V2.44H6.2M15.89,10L20.63,5.26V2.44H17.8L13.06,7.18L15.89,10M10.94,15L8.11,12.13L5.9,14.34L3.78,12.22L2.37,13.63L4.84,16.1L1.66,19.29C1.27,19.68 1.27,20.31 1.66,20.7L2.37,21.41C2.76,21.8 3.39,21.8 3.78,21.41L7,18.23L9.44,20.7L10.85,19.29L8.73,17.17L10.94,15Z" />
+                </svg>
+              </span>
+
+            </section>
+
+            <section id='ammunition' class='text-center buttons'>
+              <span id='change-ammunition-ball' title='Load cannonball'><span class='fas fa-bowling-ball'></span></span>
+              <span id='change-ammunition-chain' title='Load chainshot'><span class='fas fa-link'></span></span>
+              <span id='change-ammunition-grape' title='Load grapeshot'><span class='fas fa-lemon'></span></span>
+            </section>
+
+          </div>
+
+
+          <div id='infobox'>
+
+            <h2>Ship info</h2>
+            <p>Type:</p>
+            <p>Name:</p>
+
+            <div id='stat-bars'>
+              <div class="progress">
+                <div id='sailors' class="progress-bar bg-danger" role="progressbar" style="width: 0%">Sailors</div>
+              </div>
+              <div class="progress">
+                <div id='hull-health' class="progress-bar bg-success" role="progressbar" style="width: 0%">Hull health</div>
+              </div>
+              <div class="progress">
+                <div id='sails-health' class="progress-bar bg-info" role="progressbar" style="width: 0%" >Sail health</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class='container-fluid'>
+      <div class='row'>
+        <section class='text-center col-md-12'>
+          <h1 class='text-center'>Ships & Sails</h1>
+        </section>
+      </div>
+    </div>
+
+    <div class='container-fluid'>
+
+        <div class='col-md-10 offset-md-2'>
+
+          <section id='tiles' class='col-md-10'>
+            <!-- All tiles and ships are spawned in here -->
+
+            <section id='ships'><!-- All ships are spawned in here --></section>
+
+          </section>
+
+      </div>
+
+    </div>
+
+    
+
+    <script th:src='@{js/js.js}' charset="utf-8">
+    </script>
+
+  </body>
+</html>
