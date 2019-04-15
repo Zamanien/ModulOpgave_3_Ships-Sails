@@ -43,5 +43,7 @@ hs_err_pid*
 # Visual paradigm backup files
 *.vpp.bak_*
 
+code/src/main/resources/application.properties
+
 # project specific
 config.ini
