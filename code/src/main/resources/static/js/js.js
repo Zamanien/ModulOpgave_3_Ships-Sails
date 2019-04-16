@@ -21,6 +21,8 @@ class Ship {
     this.currentAmmunitionType = 0
     this.load = 0
     this.speed = 0 // The current speed of the ship
+
+    // TODO: Add turns and moves max as well as the number currently made here? Really such values, and many others, should be passed by and thus set by Java.
   }
 }
 
@@ -64,9 +66,9 @@ var sfx_volume = 0.6
 
 /* Tiles / World settings */
 
-const width = 7                // 4 lower than the number of columns to make The number of columns to make
-const height = 5               // 1 lower than the total number of tiles from top to bottom
-const t_width = width + 5      // Total width and heights, starting from 0
+const width = 6                   // It makes 1 less than twice the amount of this, if not zero indexed
+const height = 5                  // 1 lower than the total number of tiles from top to bottom, if not zero indexed
+const t_width = width * 2 - 2     // Total width and heights, starting from 0
 
 /* Ship settings */
 
@@ -112,13 +114,14 @@ place_ships()
 
 
 
-/* Methods */
+/* METHODS */
+
 function place_tiles() {
   let tilesHTML = document.getElementById('tiles') // Get a reference to what will be the element surrounding all the tiles
   const tile_offset_height = 121 // Pretty much = the height of the tile
   const tile_offset_width = 210  // Pretty much = the width of the tile
 
-  // Add the first set of tiles
+  // Add the odd columns of tiles
   for (var w = 0; w < width; w++) {
 
     for (var h = 0; h < height+1; h++) {
@@ -131,10 +134,10 @@ function place_tiles() {
       div.style.left += (w * tile_offset_width)  + "px"
       // place_tile_coordinates((h * tile_offset_height), (w * tile_offset_width), h, w*2)
     }
-
   }
 
 
+  // Add the even columns of tiles (done independently since they're offset from each other)
   for (var w = 0; w < (width-1); w++) {
 
     for (var h = 0; h < (height+1); h++) {
@@ -142,8 +145,9 @@ function place_tiles() {
       let div = document.createElement('div')
       div.classList.add('basic-tile')
 
-      new_h = -60 // Basically tile height / 2
-      new_w = 105 // Basically tile width / 2
+      // Calculating offsets for the first two tiles, which the rest will be positioned based on
+      new_h = Math.floor(tile_offset_height / 2) * -1 // Negative to move the tile upwards by half the tile height
+      new_w = Math.floor(tile_offset_width / 2)
 
       tilesHTML.appendChild(div)
       tiles.push( new Tile(div, h, (w+1)*2-1) ) // Add tile to the tile array: 0,1 - 0,3 - 0,5
@@ -152,7 +156,6 @@ function place_tiles() {
       div.style.left += new_w + (w * tile_offset_width)  + "px"
       // place_tile_coordinates(new_h + (h * tile_offset_height), new_w + (w * tile_offset_width), h, (w+1)*2-1)
     }
-
   }
 }
 
@@ -239,6 +242,7 @@ function end_turn() {
   if (ship.load != 0) ship.load--
   display_current_ammunition() // The ammunition might be loaded now, so the UI should show it
 }
+
 
 // Adding an event listener on the Ships div, used for ship selection below 
 document.getElementById('ships').addEventListener('click', function(event) {
