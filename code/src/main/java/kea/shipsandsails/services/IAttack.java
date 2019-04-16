@@ -1,7 +1,7 @@
 package kea.shipsandsails.services;
 
-import dk.kea.shipgame.Model.Order;
-import dk.kea.shipgame.Model.Ship;
+import kea.shipsandsails.models.Order;
+import kea.shipsandsails.models.Ship;
 
 import java.util.List;
 

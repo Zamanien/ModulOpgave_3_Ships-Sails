@@ -1,8 +1,9 @@
 package kea.shipsandsails.services;
 
-import dk.kea.shipgame.Model.Order;
-import dk.kea.shipgame.Model.Ship;
-import dk.kea.shipgame.Model.Weather;
+
+import kea.shipsandsails.models.Order;
+import kea.shipsandsails.models.Ship;
+import kea.shipsandsails.models.Weather;
 
 import java.util.List;
 
