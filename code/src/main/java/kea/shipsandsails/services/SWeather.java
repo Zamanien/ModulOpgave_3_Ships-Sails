@@ -10,7 +10,7 @@ public class SWeather implements IWeather {
     public SWeather() {
     }
 
-    public void newWeather() {
+    public Weather newWeather() {
         Direction[] weatherArray = {Direction.N, Direction.NE, Direction.SE, Direction.S, Direction.SW, Direction.NW};
         Weather currentWeather = new Weather();
         Direction newWeather;
@@ -43,6 +43,7 @@ public class SWeather implements IWeather {
             newWeather = weatherArray[index];
         }
         currentWeather.setWindDirection(newWeather);
+        return currentWeather;
     }
 
 }
