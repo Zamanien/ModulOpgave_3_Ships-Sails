@@ -10,15 +10,14 @@ public class SWeather implements IWeather {
     public SWeather() {
     }
 
-    public Weather newWeather() {
+    public Weather newWeather(Weather weather) {
         Direction[] weatherArray = {Direction.N, Direction.NE, Direction.SE, Direction.S, Direction.SW, Direction.NW};
-        Weather currentWeather = new Weather();
         Direction newWeather;
 
-        if (currentWeather.getWindDirection() == null) {
+        if (weather.getWindDirection() == null) {
             newWeather = weatherArray[new Random().nextInt(6)];
         } else {
-            int index = currentWeather.getWindDirection().ordinal();
+            int index = weather.getWindDirection().ordinal();
             switch(new Random().nextInt(12)+1) {
                 case 1:
                     index -= 2;
@@ -42,8 +41,8 @@ public class SWeather implements IWeather {
             }
             newWeather = weatherArray[index];
         }
-        currentWeather.setWindDirection(newWeather);
-        return currentWeather;
+        weather.setWindDirection(newWeather);
+        return weather;
     }
 
 }
