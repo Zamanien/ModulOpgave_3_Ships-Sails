@@ -5,12 +5,12 @@ import kea.shipsandsails.models.Weather;
 
 import java.util.Random;
 
-public class SWeather implements IWeather {
+public class WeatherService implements IWeather {
 
-    public SWeather() {
+    public WeatherService() {
     }
 
-    public Weather newWeather(Weather weather) {
+    public void newWeather(Weather weather) {
         Direction[] weatherArray = {Direction.N, Direction.NE, Direction.SE, Direction.S, Direction.SW, Direction.NW};
         Direction newWeather;
 
@@ -42,7 +42,6 @@ public class SWeather implements IWeather {
             newWeather = weatherArray[index];
         }
         weather.setWindDirection(newWeather);
-        return weather;
     }
 
 }
