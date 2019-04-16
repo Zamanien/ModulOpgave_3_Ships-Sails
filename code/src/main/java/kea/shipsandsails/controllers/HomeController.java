@@ -1,4 +1,4 @@
-package kea.shipsandsails.ui.controllers;
+package kea.shipsandsails.controllers;
 
 import org.springframework.stereotype.Controller;
 // import org.springframework.ui.Model; // For the model!

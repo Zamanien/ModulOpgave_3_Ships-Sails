@@ -1,4 +1,4 @@
-package dk.kea.shipgame.Service;
+package kea.shipsandsails.services;
 
 import dk.kea.shipgame.Model.Order;
 import dk.kea.shipgame.Model.Ship;

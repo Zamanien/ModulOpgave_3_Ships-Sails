@@ -1,45 +1,84 @@
 package kea.shipsandsails.models;
 
-public class Ship {
+public class OurShipOld {
 
     private int shipId;
     private int shipType;
     private String nationality;
     private String name;
-    private Coordinate coordinate;
+    private int x;
+    private int y;
     private Direction direction; //ENUM, N, NE, SE, S, SW, NW
     private int speed; //change: speed last round +/- calculated change
-    private int hull_health; //0 - 100%
-    private int sail_health; //0 - 100%
+    private int hull_health; //0 - 100
+    private int sail_health; //0 - 100
     private int sailors; //0 - MAX_SAILORS
-    private int load; //load time
-    private int currentAmmunitionType; //0=canonball, 1=chainball, 2=grapeshot
+    private int load; //load time // Set this to 1 if reloading, 2 if switching ammunition, then decrement by one each turn? when 0 one can fire?
 
-    public Ship() {
+    /* Our group added */
+
+    private int sailorsOnSails;
+    private int sailorsOnGuns;
+    private int sailsActive;
+    private int sailsInReserve;
+
+    private final int rows_of_guns = 1;
+    private final int guns_per_row = 8;
+
+    public int getSailorsOnSails() {
+      return sailorsOnSails;
     }
 
-    public Ship(int shipId, int shipType, String nationality, String name, Coordinate coordinate, Direction direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
+    public int getsailorsOnGuns() {
+      return sailorsOnGuns;
+    }
+
+    public int getSailsActive() {
+      return sailsActive;
+    }
+
+    public int getSailsInReserve() {
+      return sailsInReserve;
+    }
+
+    public void setSailsActive(int sailsActive) {
+      this.sailsActive = sailsActive;
+    }
+
+    public void setSailsInReserve(int sailsInReserve) {
+      this.sailsInReserve = sailsInReserve;
+    }
+
+    public void setSailorsOnSails(int sailorsOnSails) {
+      this.sailorsOnSails = sailorsOnSails;
+    }
+
+    public void setSailorsOnGuns(int sailorsOnGuns) {
+      this.sailorsOnGuns = sailorsOnGuns;
+    }
+
+
+    public OurShipOld(int shipId, int shipType, String nationality, String name, int x, int y, Direction direction, int speed, int hull_health, int sail_health, int load, int sailors, int sailsActive, int sailsInReserve, int sailorsOnSails, int sailorsOnGuns) {
         this.shipId = shipId;
         this.shipType = shipType;
         this.nationality = nationality;
         this.name = name;
-        this.coordinate = coordinate;
+        this.x = x;
+        this.y = y;
         this.direction = direction;
         this.speed = speed;
         this.hull_health = hull_health;
         this.sail_health = sail_health;
-        this.sailors = sailors;
         this.load = load;
-        this.currentAmmunitionType = currentAmmunitionType;
+        this.sailors = sailors;
+
+        this.sailsActive = sailsActive;
+        this.sailsInReserve = sailsInReserve;
+        this.sailorsOnSails = sailsActive * 6 + 2/(sailors-sailsActive*6-rows_of_guns*guns_per_row*3);    // 6: The number of sailors per sail for all ship types
+        this.sailorsOnGuns = sailors - sailorsOnSails;
     }
 
-    public int getCurrentAmmunitionType() {
-        return currentAmmunitionType;
-    }
-
-    public void setCurrentAmmunitionType(int currentAmmunitionType) {
-        this.currentAmmunitionType = currentAmmunitionType;
-    }
+    /* // Our group added */
 
     public int getShipId() {
         return shipId;
@@ -73,12 +112,20 @@ public class Ship {
         this.name = name;
     }
 
-    public Coordinate getCoordinate() {
-        return coordinate;
+    public int getX() {
+        return x;
     }
 
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public Direction getDirection() {

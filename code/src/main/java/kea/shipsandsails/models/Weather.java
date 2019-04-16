@@ -1,4 +1,4 @@
-package dk.kea.shipgame.Model;
+package kea.shipsandsails.models;
 
 public class Weather {
     private Direction windDirection; //ENUM N, NE, SE, S, SW, NW

@@ -1,4 +1,4 @@
-package dk.kea.shipgame.Model;
+package kea.shipsandsails.models;
 
 import java.util.List;
 
