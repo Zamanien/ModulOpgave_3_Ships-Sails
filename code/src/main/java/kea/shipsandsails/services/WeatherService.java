@@ -36,8 +36,8 @@ public class WeatherService implements IWeather {
                 default:
                     break;
             }
-            if (!(index >= 0 && index <= 5)) {
-                index = Math.abs(6 - Math.abs(index));
+            if (!(index >= 0 && index < weatherArray.length)) {
+                index = Math.abs(weatherArray.length - Math.abs(index));
             }
             newWeather = weatherArray[index];
         }
