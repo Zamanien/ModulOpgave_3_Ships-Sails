@@ -17,10 +17,11 @@ public class ScenarioService {
   // Map<String, String> scenario;
 
   @Autowired
-  ScenarioRepo ss;
+  ScenarioRepo sr;
 
   public Scenario fetchScenario(String scenario) {
-    return ss.fetchScenario(scenario);
+    assert sr != null; // For testing
+    return sr.fetchScenario(scenario);
   }
   
 }
