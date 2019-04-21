@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
-import java.util.ArrayList;
 import java.sql.Types;
 
 // Maybe this should only handle shipTypes, or it should be renamed to make it clear it interacts with multiple tables?
