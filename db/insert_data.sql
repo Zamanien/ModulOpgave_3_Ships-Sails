@@ -1,24 +1,48 @@
--- If it doesn't work:
--- Try LOAD DATA LOCAL instead.  You may need to run mysql with --local-infile=1 as well, both server and client side.
--- If run WITHOUT LOCAL the path should be on the server, while WITH LOCAL it should be on the client.
--- Alternately set my.ini's secure_file_priv=""
-
-USE modulopgave3;
+USE shipsandsails;
 
 -- Disable FOREIGN KEY checks before emptying tables
 SET FOREIGN_KEY_CHECKS=0;
 
 -- Empty tables
 TRUNCATE TABLE ships;
+TRUNCATE TABLE ship_types;
+TRUNCATE TABLE scenarios;
+TRUNCATE TABLE nationalities;
 
 SET FOREIGN_KEY_CHECKS=1;
 
--- The path for LOAD DATA should be for the server!
--- Your INFILE path may have to be updated!
-LOAD DATA
-  INFILE '/var/lib/mysql/ships.csv'
-  INTO TABLE ships
-  CHARACTER SET UTF8
-  FIELDS TERMINATED BY ';' ENCLOSED BY '' ESCAPED BY '\\'
-  IGNORE 1 LINES
-  ;
+
+INSERT INTO nationalities (name) VALUES ('Aztec');
+INSERT INTO nationalities (name) VALUES ('Celts');
+
+
+
+INSERT INTO scenarios (name, player1, player2, map_width, map_height) VALUES ('X Marks the Spot' , 'Aztec'   , 'Celts'   , 6         , 5);
+
+
+
+INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , rows_of_guns , guns_per_row , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
+VALUES ('Brig'               , 60      , 24                     , 24                      , 1            , 8            , 25             , 4            , 30          , 2         , 1                , 1);
+
+INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , rows_of_guns , guns_per_row , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
+VALUES ('Ship of the Line'   , 160     , 48                     , 60                      , 2            , 16           , 60             , 10           , 60          , 5         , 2                , 2);
+
+INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , rows_of_guns , guns_per_row , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
+VALUES ('Man at War'         , 340     , 84                     , 144                     , 3            , 28           , 140            , 24           , 80          , 4         , 1                , 1);
+
+
+
+INSERT INTO ships (type   , scenario           , nationality , position_x , position_y , direction)
+VALUES('Ship of the Line' , 'X Marks the Spot' , 'Aztec'     , 3          , 4          , 3);
+
+INSERT INTO ships (type   , scenario           , nationality , position_x , position_y , direction)
+VALUES('Brig'             , 'X Marks the Spot' , 'Aztec'     , 3          , 5          , 2);
+
+INSERT INTO ships (type   , scenario           , nationality , position_x , position_y , direction)
+VALUES('Man At War'       , 'X Marks the Spot' , 'Aztec'     , 2          , 2          , 3);
+
+INSERT INTO ships (type   , scenario           , nationality , position_x , position_y , direction)
+VALUES('Man At War'       , 'X Marks the Spot' , 'Celts'     , 1          , 5          , 1);
+
+INSERT INTO ships (type   , scenario           , nationality , position_x , position_y , direction)
+VALUES('Ship of the Line' , 'X Marks the Spot' , 'Celts'     , 0          , 1          , 4);
