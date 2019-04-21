@@ -15,6 +15,8 @@ public class ShipType {
   private int max_speed_change;
   private int max_rotate;
 
+  public ShipType() {} // Required by Spring, at least for models
+
   public ShipType(int sailors, int sailors_needed_on_guns, int sailors_needed_on_sails, int rows_of_guns, int guns_per_row, int hull_condition, int max_sails_up, int sails_total, int max_speed, int max_speed_change, int max_rotate) {
     this.sailors = sailors;
     this.sailors_needed_on_guns = sailors_needed_on_guns;

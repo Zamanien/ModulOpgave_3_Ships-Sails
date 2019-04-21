@@ -14,8 +14,7 @@ public class Order {
     private int ammunitionType; //0=canonball, 1=chainball, 2=grapeshot
     private int target; //not possible to shoot straight forward or backward - Enum?
 
-    public Order() {
-    }
+    public Order() {}
 
     public Order(int shipId, int turnNumber, int turn, int sailUsage, List<Coordinate> coordinateList, boolean fire, boolean load, int ammunitionType, int target) {
         this.shipId = shipId;

@@ -15,8 +15,7 @@ public class Ship {
     private int load; //load time
     private int currentAmmunitionType; //0=canonball, 1=chainball, 2=grapeshot
 
-    public Ship() {
-    }
+    public Ship() {} // Required by Spring, at least for models
 
     public Ship(int shipId, int shipType, String nationality, String name, Coordinate coordinate, Direction direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
         this.shipId = shipId;

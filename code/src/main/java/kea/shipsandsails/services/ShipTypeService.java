@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import kea.shipsandsails.repositories.ShipTypeRepo;
 import kea.shipsandsails.models.ShipType;
 
-import java.util.Collection;
+import java.util.List;
 // import java.util.Map;
 
 @Service
@@ -19,7 +19,7 @@ public class ShipTypeService {
   @Autowired
   ShipTypeRepo str;
 
-  public Collection<ShipType> fetchShipTypes() {
+  public List<ShipType> fetchShipTypes() {
     return str.fetchShipTypes();
   }
 
