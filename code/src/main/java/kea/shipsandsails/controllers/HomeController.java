@@ -8,12 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import kea.shipsandsails.services.ScenarioService;
 import kea.shipsandsails.services.ShipService;
-import kea.shipsandsails.models.Ship;
 import kea.shipsandsails.services.ShipTypeService;
-import java.util.Collection;
+import kea.shipsandsails.models.Scenario;
+import kea.shipsandsails.models.Ship;
+import kea.shipsandsails.models.ShipType;
+import java.util.List;
 
 @Controller
 public class HomeController {
+
+  public List<Ship> ships; // Maybe these should be private and only passed into movement and guns, but for now it's probably easier to test things when they're public
+  public List<ShipType> shipTypes;
+  public Scenario scenario;
 
   // Autowired must be specified above each service, not just once above all of them
   @Autowired 
@@ -26,13 +32,17 @@ public class HomeController {
   // The main menu
   @GetMapping("/")
   public String mainmenu() {
-    // Just a test
-    System.out.println( scs.fetchScenario("X Marks the Spot").getName() );
 
-    Ship ship = (Ship) shs.fetchScenarioShips("X Marks the Spot").get(1) ;
-    System.out.println(ship.getNationality());
+    // Mainly for testing
+    scenario = scs.fetchScenario("X Marks the Spot");
+    System.out.println( scenario.getName() );
 
-    System.out.println( shtys.fetchShipTypes().get(1).getName() );
+    ships = shs.fetchScenarioShips("X Marks the Spot");
+    System.out.println(ships.get(1).getNationality());
+
+    shipTypes = shtys.fetchShipTypes();
+    System.out.println( shipTypes.get(1).getName() );
+
     return "index";
   }
 
