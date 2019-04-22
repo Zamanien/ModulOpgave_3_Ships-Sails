@@ -15,21 +15,21 @@ public class ShipType {
   private int max_speed_change;
   private int max_rotate;
 
-  public ShipType() {} // Required by Spring, at least for models
+  // public ShipType() {} // Required by Spring, at least for models
 
-  public ShipType(int sailors, int sailors_needed_on_guns, int sailors_needed_on_sails, int rows_of_guns, int guns_per_row, int hull_condition, int max_sails_up, int sails_total, int max_speed, int max_speed_change, int max_rotate) {
-    this.sailors = sailors;
-    this.sailors_needed_on_guns = sailors_needed_on_guns;
-    this.sailors_needed_on_sails = sailors_needed_on_sails;
-    this.rows_of_guns = rows_of_guns;
-    this.guns_per_row = guns_per_row;
-    this.hull_condition = hull_condition;
-    this.max_sails_up = max_sails_up;
-    this.sails_total = sails_total; // All sails incl. or excl. max_sails_up?
-    this.max_speed = max_speed;
-    this.max_speed_change = max_speed_change;
-    this.max_rotate = max_rotate;
-  }
+  // public ShipType(int sailors, int sailors_needed_on_guns, int sailors_needed_on_sails, int rows_of_guns, int guns_per_row, int hull_condition, int max_sails_up, int sails_total, int max_speed, int max_speed_change, int max_rotate) {
+  //   this.sailors = sailors;
+  //   this.sailors_needed_on_guns = sailors_needed_on_guns;
+  //   this.sailors_needed_on_sails = sailors_needed_on_sails;
+  //   this.rows_of_guns = rows_of_guns;
+  //   this.guns_per_row = guns_per_row;
+  //   this.hull_condition = hull_condition;
+  //   this.max_sails_up = max_sails_up;
+  //   this.sails_total = sails_total; // All sails incl. or excl. max_sails_up?
+  //   this.max_speed = max_speed;
+  //   this.max_speed_change = max_speed_change;
+  //   this.max_rotate = max_rotate;
+  // }
 
   public String getName() {
     return name;

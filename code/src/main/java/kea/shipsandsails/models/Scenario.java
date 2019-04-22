@@ -8,15 +8,15 @@ public class Scenario {
   private int map_width;   // The dimensions of the map (number of hexes)
   private int map_height;
 
-  public Scenario() {}; // Apparently Spring outright requires the empty, default constructor, at least for models.
+  // public Scenario() {}; // Apparently Spring outright requires the empty, default constructor, at least for models.
     
-  public Scenario(String name, String player1, String player2, int map_width, int map_height) {
-    this.name = name;
-    this.player1 = player1;
-    this.player2 = player2;
-    this.map_width = map_width;
-    this.map_height = map_height;
-  }
+  // public Scenario(String name, String player1, String player2, int map_width, int map_height) {
+  //   this.name = name;
+  //   this.player1 = player1;
+  //   this.player2 = player2;
+  //   this.map_width = map_width;
+  //   this.map_height = map_height;
+  // }
 
   public String getName() {
     return name;

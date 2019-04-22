@@ -15,22 +15,22 @@ public class Ship {
     private int load; //load time
     private int currentAmmunitionType; //0=canonball, 1=chainball, 2=grapeshot
 
-    public Ship() {} // Required by Spring, at least for models
+    // public Ship() {} // Required by Spring, at least for models
 
-    public Ship(int shipId, int shipType, String nationality, String name, Coordinate coordinate, Direction direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
-        this.shipId = shipId;
-        this.shipType = shipType;
-        this.nationality = nationality;
-        this.name = name;
-        this.coordinate = coordinate;
-        this.direction = direction;
-        this.speed = speed;
-        this.hull_health = hull_health;
-        this.sail_health = sail_health;
-        this.sailors = sailors;
-        this.load = load;
-        this.currentAmmunitionType = currentAmmunitionType;
-    }
+    // public Ship(int shipId, int shipType, String nationality, String name, Coordinate coordinate, Direction direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
+    //     this.shipId = shipId;
+    //     this.shipType = shipType;
+    //     this.nationality = nationality;
+    //     this.name = name;
+    //     this.coordinate = coordinate;
+    //     this.direction = direction;
+    //     this.speed = speed;
+    //     this.hull_health = hull_health;
+    //     this.sail_health = sail_health;
+    //     this.sailors = sailors;
+    //     this.load = load;
+    //     this.currentAmmunitionType = currentAmmunitionType;
+    // }
 
     public int getCurrentAmmunitionType() {
         return currentAmmunitionType;
