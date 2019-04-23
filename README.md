@@ -10,7 +10,7 @@
 
 [Attack icon](https://materialdesignicons.com/)
 
-[Ship](https://forum.chaos-project.com/index.php?topic=563.0)
+[Our previous ship model](https://forum.chaos-project.com/index.php?topic=563.0)
 
 ## Fonts
 

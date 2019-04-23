@@ -60,7 +60,7 @@ enemy = "Celts"
 
 // const audio = new Audio('audio/music/5.opus')
 const audio = new Audio('audio/music/7.opus')
-audio.play()
+// audio.play() // Auto-play music
 var sfx_muted = false
 var sfx_volume = 0.6
 
@@ -317,7 +317,7 @@ function move() {
       if (aTile.x == ship.x && aTile.y == ship.y) {
         let cb = document.getElementById("tiles").getBoundingClientRect();
         let coords = aTile.el.getBoundingClientRect();
-        ship.el.style.left = (coords.left - cb.left + 35) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
+        ship.el.style.left = (coords.left - cb.left + 35) + "px" // The last value was adjusted manually to move the ship from the edge of the tile to the center
         ship.el.style.top  = (coords.top - cb.top + 20) + "px"
         break
       }
@@ -372,7 +372,8 @@ function turn_counter_clockwise() {
 
 
 // TODO: I think it would be easier to decouple the rotation as received from Java from the visual representation of the rotation, as chaging the latter might not mean changing the former
-function turn_visual(direction) {
+// It's async because we need to sleep while the ship rotates, before it moves and the best practice way of doing this is via a promise (in a thread)
+async function turn_visual(direction) {
   cur_orientation = parseInt( ship.el.style.transform.match(/-?\d+/)[0] ) // NOTE: This works as long as I don't use transform for setting anything besides rotation. The last part extracts the first number from the string
 
   if (direction == "CW") {
@@ -382,48 +383,14 @@ function turn_visual(direction) {
     ship.el.style.transform = 'rotate(' + (cur_orientation - o_degrees) + 'deg)'
   }
 
-  // Handling image switching here:
-  clear_rotation_classes();
-  if (ship.orientation == 30) {   
-    ship.el.classList.add('ship-left')
-    ship.el.style.transition = 'transform 2s'
-    ship.el.style.transform = 'rotate(30deg)'
-  }
-  else if (ship.orientation == 330)    {
-    ship.el.classList.add('ship-left')
-    ship.el.style.transition = 'transform 2s'
-    ship.el.style.transform = 'rotate(-30deg)'
-  }
-  else if (ship.orientation == 150) {
-    ship.el.classList.add('ship-right')
-    ship.el.style.transition = 'transform 2s'
-    ship.el.style.transform = 'rotate(-30deg)'
-  }
-  else if (ship.orientation == 210) {
-    ship.el.classList.add('ship-right')
-    ship.el.style.transition = 'transform 2s'
-    ship.el.style.transform = 'rotate(30deg)'
-  }
-
-  else if (ship.orientation == 90)   { 
-    ship.el.classList.add('ship-up')
-    ship.el.style.transition = 'transform 0s'
-    ship.el.style.transform = 'rotate(0deg)' // Set to 0 rather than empty string to not mess up parseInt above
-  }
-  else { // 270  
-    ship.el.classList.add('ship-down')
-    ship.el.style.transition = 'transform 0s'
-    ship.el.style.transform = 'rotate(0)'
-  }
-  ship.el.style.transition = 'top 1.7s, left 1.7s'; /* Also reset by setting transition just to transform 0s, so... */
+  await sleep(1700); // Whatever the transition duration is (ie. the time it takes to rotate)
+  move()
 }
 
-function clear_rotation_classes() {
-  ship.el.classList.remove('ship-left')
-  ship.el.classList.remove('ship-right')
-  ship.el.classList.remove('ship-up')
-  ship.el.classList.remove('ship-down')
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 
 
 /* ATTACK / WEAPONS */

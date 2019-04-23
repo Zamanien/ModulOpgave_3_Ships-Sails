@@ -92,25 +92,31 @@ h2 {
 }
 
 /* Styling differing between ship models */
-.ship-of-the-line {
-  background-image: url("../img/ship-of-the-line.png");
-  background-position: 0px -120px; /* Default position, facing left */
-  height: 88px;
-  width: 80px;
+.brig {
+  background-image: url("../img/ship-types/brig.svg");
+  /* background-position: 0px -120px; /1* Default position, facing left *1/ */
+  height: 90px;
+  width: 90px;
+  background-size:240% 240%;
+  background-position: -70px -75px; /* Default position, facing left */
 }
 
-.brig {
-  background-image: url("../img/brig.png");
-  background-position: 0px -120px; /* Default position, facing left */
-  height: 88px;
-  width: 80px;
+.ship-of-the-line {
+  background-image: url("../img/ship-types/ship-of-the-line.svg");
+  /* background-position: 0px -120px; /1* Default position, facing left *1/ */
+  height: 90px;
+  width: 90px;
+  background-size:240% 240%;
+  background-position: -75px -75px; /* Default position, facing left */
 }
 
 .man-at-war {
-  background-image: url("../img/man-at-war.png");
-  background-position: 0px -120px; /* Default position, facing left */
-  height: 88px;
-  width: 80px;
+  background-image: url("../img/ship-types/man-at-war.svg");
+  /* background-position: 0px -120px; /1* Default position, facing left *1/ */
+  height: 90px;
+  width: 90px;
+  background-size:240% 240%;
+  background-position: -70px -85px; /* Default position, facing left */
 }
 
 .ship-selected {
@@ -119,26 +125,6 @@ h2 {
   border: 3px dashed #ccc;
 }
 
-
-/* Rotation based images */
-
-.ship-left {
-  /* transform: scaleX(1); */ 
-  background-position: 0px -120px;
-}
-
-.ship-right {
-  /*transform: scaleX(-1);*/
-  background-position: 0px -220px;
-}
-
-.ship-up {
-  background-position: 0px -300px;
-}
-
-.ship-down {
-  background-position: 0px 0px;
-}
 
 /* Stat bars for sailors, hull */
 #stat-bars {
