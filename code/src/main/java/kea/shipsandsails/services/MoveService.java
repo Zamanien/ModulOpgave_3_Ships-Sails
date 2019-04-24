@@ -1,5 +1,7 @@
 package kea.shipsandsails.services;
 
+import kea.shipsandsails.controllers.HomeController;
+import kea.shipsandsails.models.Direction;
 import kea.shipsandsails.models.Order;
 import kea.shipsandsails.models.Ship;
 import kea.shipsandsails.models.Weather;
@@ -8,34 +10,59 @@ import java.util.List;
 
 public class MoveService implements IMove {
 
-    //move ships and resolve collisions
+    // move ships and resolve collisions
     public void movement(List<Ship> ships, List<Order> orders, Weather weather) {
     }
 
-    // alt movement i indeværende tur ofres mod at sætte maks sejl (eller så mange som lageret samt sailors tillader).
-    public void rigNewSails(int maxSails, int sailors) {
-        setActiveSails();
-        setRemainingMove(0);
+    // move selected ship to new position and direction
+    public Ship moveShip(Ship ship, int rotateDirection) {
+        newRotation(ship, rotateDirection);
+        newPosition(ship);
+        onBoard(ship);
+        return ship;
     }
 
-    // udregner andelen af aktive sails, f.eks. 10%, 25%, osv.
-    public double sailQuality(int sails, int sailors) {
-        double sailQuality = 100.0;
-        return sailQuality;
+    // rotate selected ship
+    private void newRotation(Ship ship, int rotateDirection) {
+        int index = ship.getDirection().ordinal() + rotateDirection;
+        Direction[] directionArray = {Direction.N, Direction.NE, Direction.SE, Direction.S, Direction.SW, Direction.NW};
+        if (!(index >= 0 && index < directionArray.length)) {
+            index = Math.abs(directionArray.length - Math.abs(index));
+        }
+        ship.setDirection(directionArray[index]);
     }
 
-    // antal gange et skib kan rotere i indeværende tur.
-    public turningsRemaining(int shipID) {
+    // move selected ship
+    private void newPosition(Ship ship) {
+        switch (ship.getDirection()) {
+            case N:
+                ship.getCoordinate().setX(ship.getCoordinate().getX() - 1);
+                break;
+            case NE:
+                ship.getCoordinate().setX(ship.getCoordinate().getX() - 1);
+                ship.getCoordinate().setY(ship.getCoordinate().getY() + 1);
+                break;
+            case SE:
+                ship.getCoordinate().setY(ship.getCoordinate().getY() + 1);
+                break;
+            case S:
+                ship.getCoordinate().setX(ship.getCoordinate().getX() + 1);
+                break;
+            case SW:
+                ship.getCoordinate().setY(ship.getCoordinate().getY() - 1);
+                break;
+            case NW:
+                ship.getCoordinate().setX(ship.getCoordinate().getX() - 1);
+                ship.getCoordinate().setY(ship.getCoordinate().getY() - 1);
+                break;
+        }
     }
 
-    // collission.
-    public collissionDamage(int shipID) {
-        double collissionDam = ship1.getHullStrength - shipID.getHullStrength * 0.3;
-        if (collissionDam <= 0) {
-            remove ship;
-        } else {
-            ship1.setHullStrength = ship1.getHullStrength - collissionDam;
-            remainingMove(0);
+    // selected ship still on board
+    private void onBoard(Ship ship) {
+        if (!((ship.getCoordinate().getX() >= 0 && ship.getCoordinate().getX() < HomeController.scenario.getMapWidth()) &&
+                (ship.getCoordinate().getY() >= 0 && ship.getCoordinate().getY() < HomeController.scenario.getMapHeight()))) {
+            ship = null;
         }
     }
 }
@@ -43,20 +70,6 @@ public class MoveService implements IMove {
 
 
 /*
-alle skibe rykker 1 felt samtidig, der skal løbende tjekkes for kollision
-
-brættet skal extendes i alle retninger med ét ekstra felt der ikke vises for spilleren.
-f.eks. 12 x 12 som går fra 0 to 11 gange 0 to 11 hvor der kun kan rykkes på 1-10 felterne.
-derved undgår move metoderne underlige edge cases som varierer fra hex til hex.
-
-et skib der rykker til 0 eller 11 i ovenstående tilfælde vil blive ødelagt.
-
-UI skal ændres en smule. det er ikke muligt at rotere i samme felt, man kan kun gå til et af de tre felter foran skibet.
-
-forslag til UI, omkredsen af feltet bag et skib kan være enten grønt eller rødt, grønt hvis det har mere move tilbage.
-
-
-
 kan der rykkes til en af tre hexes foran skibet?:
 moveRemaining();
 turningsRemaining();
