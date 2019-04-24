@@ -12,11 +12,11 @@ public class Ship {
     private int direction;             // ENUM, N, NE, SE, S, SW, NW
     private int speed;                 // change: speed last round +            / - calculated change
     private int sailors;               // 0 - MAX_SAILORS
-    private int sail_health;           // 0 - 100%
+    private double sail_health;        // 0 - 100%
     private int current_sails_up;
     private int sails_total;
-    private int moves_remaining;        // How many moves the ship has left. 0 = none
-    private int rotations_remaining;    // How many rotations the ship has left. 0 = none
+    private int moves_remaining;       // How many moves the ship has left. 0 = none
+    private int rotations_remaining;   // How many rotations the ship has left. 0 = none
 
     private int hull_health;           // 0 - 100%
     private int load;                  // load time
@@ -168,11 +168,11 @@ public class Ship {
         this.hull_health = hull_health;
     }
 
-    public int getSail_health() {
+    public double getSailHealth() {
         return sail_health;
     }
 
-    public void setSail_health(int sail_health) {
+    public void setSailHealth(double sail_health) {
         this.sail_health = sail_health;
     }
 
