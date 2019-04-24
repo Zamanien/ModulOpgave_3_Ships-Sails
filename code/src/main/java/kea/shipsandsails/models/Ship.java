@@ -3,7 +3,7 @@ package kea.shipsandsails.models;
 public class Ship {
 
     private int id;
-    private int type;
+    private String type;
     private String nationality;
     private String name;
     private int x;
@@ -14,14 +14,19 @@ public class Ship {
     private int sail_health;           // 0 - 100%
     private int sailors;               // 0 - MAX_SAILORS
     private int load;                  // load time
-    private int currentAmmunitionType; // 0=canonball, 1=chainball, 2=grapeshot
+    private int current_ammunition_type; // 0=canonball, 1=chainball, 2=grapeshot
+    private int moves_remaining;        // How many moves the ship has left. 0 = none
+    private int rotations_remaining;    // How many rotations the ship has left. 0 = none
 
+    // All the values have the same starting values for all shiptypes are set here
     public Ship() {
+      this.speed = 0;
       this.hull_health = 100;
       this.sail_health = 100;
       this.load = 0;
-      this.currentAmmunitionType = 0;
-      this.speed = 0;
+      this.current_ammunition_type = 0;
+      this.moves_remaining = 0;
+      this.rotations_remaining = 0;
     } // Required by Spring, at least for models
 
     // public Ship(int shipId, int shipType, String nationality, String name, int x, int direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
@@ -39,12 +44,28 @@ public class Ship {
     //     this.currentAmmunitionType = currentAmmunitionType;
     // }
 
+    public int getMovesRemaining() {
+      return moves_remaining;
+    }
+
+    public void setMovesRemaining(int movesRemaining) {
+      this.moves_remaining = movesRemaining;
+    }
+
+    public int getRotationsRemaining() {
+      return rotations_remaining;
+    }
+
+    public void setRotationsRemaining(int rotationsRemaining) {
+      this.rotations_remaining = rotationsRemaining;
+    }
+
     public int getCurrentAmmunitionType() {
-        return currentAmmunitionType;
+        return current_ammunition_type;
     }
 
     public void setCurrentAmmunitionType(int currentAmmunitionType) {
-        this.currentAmmunitionType = currentAmmunitionType;
+        this.current_ammunition_type = currentAmmunitionType;
     }
 
     public int getId() {
@@ -55,11 +76,11 @@ public class Ship {
         this.id = id;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
