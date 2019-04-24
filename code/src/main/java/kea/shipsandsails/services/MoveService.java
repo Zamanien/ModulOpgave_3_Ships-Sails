@@ -3,6 +3,7 @@ package kea.shipsandsails.services;
 import kea.shipsandsails.controllers.HomeController;
 import kea.shipsandsails.models.Order;
 import kea.shipsandsails.models.Ship;
+import kea.shipsandsails.models.ShipType;
 import kea.shipsandsails.models.Weather;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class MoveService implements IMove {
             index = Math.abs(6 - Math.abs(index));
         }
         ship.setDirection(index);
+
+        // decreasing rotations remaining by 1
+        if (rotateDirection != 0) {
+            ship.setRotationsRemaining(ship.getRotationsRemaining() - 1);
+        }
     }
 
     // move selected ship
@@ -54,6 +60,9 @@ public class MoveService implements IMove {
                 ship.setY(ship.getY() - 1);
                 break;
         }
+
+        // decreasing moves remaining by 1
+        ship.setMovesRemaining(ship.getMovesRemaining() - 1);
     }
 
     // selected ship still on board
@@ -63,22 +72,45 @@ public class MoveService implements IMove {
             ship = null;
         }
     }
+
+    // this method belongs with AttackService
+    // calculates sail health
+    public void newSailHealth(Ship ship, ShipType shipType) {
+        int sailsUp = Math.min(ship.getSailors() % 6, ship.getCurrentSailsUp());
+        ship.setSail_health(shipType.getMaxSailsUp() / sailsUp);
+    }
 }
 
 
 
 /*
-kan der rykkes til en af tre hexes foran skibet?:
-moveRemaining();
-turningsRemaining();
-collision i ønsket hex.
+public boolean movePossible(Ship ship) {
+    return (ship.movesRemaining() - wind > 0);
 
-moveRemaining();
-    tidligere move i samme tur.
-    wind direction samt egen direction.
-    sailQuality (aktive sails, som også afhænger af sailors)
-    max speed (afhænger af skibstype)
-speed remaining (tidligere move i samme tur)
-number of turns pr. turn (afhænger af skibstype)
-max speed change (afhænger af skibstype)
+    tjekke om der drejes og er flere turnings left
+
+    wind i forhold til egen direction
+}
+
+
+
+
+
+max move remaining:
+
+    min:
+
+    max speed
+    previousMove + maxSpeedChange - sail quality
+
+min move remaning:
+
+    max:
+
+    previousMove - maxSpeedChange
+
+
+
+rotationsRemaining samt movesRemaining reguleres/nulstilles af controlleren
+collision tjekkes efter alle har rykkket
 */
