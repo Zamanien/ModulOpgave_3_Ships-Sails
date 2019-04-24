@@ -120,9 +120,8 @@
     
     <!-- </div> -->
     
-    <script>
-    var showtext = "[[${showTextFromJavaController}]]";
-    console.log(showtext);
+    <script th:inline="javascript">
+      var j_ships = [[${j_ships}]];
     </script>
 
     <script th:src='@{js/js.js}' charset="utf-8"></script>

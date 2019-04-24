@@ -1,15 +1,15 @@
 
 // TODO: Programatically insert all ships from the array, rather than adding them manually in HTML and binding to them here
-// Ships need an ID as Java needs to be able to refer to it uniquely, and it cannot do so based off orientation or position as several ships of the same type may occupy the same space (after a collision).
+// Ships need an ID as Java needs to be able to refer to it uniquely, and it cannot do so based off direction or position as several ships of the same type may occupy the same space (after a collision).
 class Ship {
-  constructor(el, id, x, y, orientation, type, nationality) {
+  constructor(el, id, row, col, direction, type, nationality) {
     this.el = el
     this.id = id
-    this.x = x
-    this.y = y
+    this.row = row
+    this.col = col
     this.type = type
 
-    this.orientation = orientation // Scenario determined: x, y, type, orientation, nationality. More?
+    this.direction = direction // Scenario determined: x, y, type, direction, nationality. More?
     this.nationality = nationality
 
     // Stats
@@ -30,10 +30,10 @@ class Ship {
 // max speed, max sail, number_of_sailors_per_sail
 
 class Tile {
-  constructor(el, x, y) {
+  constructor(el, row, col) {
     this.el = el
-    this.x = x // These are coordinates, not pixel positions.
-    this.y = y
+    this.row = row // These are coordinates, not pixel positions.
+    this.col = col 
   }
 }
 
@@ -74,14 +74,14 @@ const t_width = width * 2 - 2     // Total width, starting from 0
 
 ship_move_distance = 90
 
-// Orientation settings. Interval: 60, resulting in 6 different directions. Hexagons! */
-o_offset = 30 // Depends on the sprite, determining its origin from which it should be rotated. Fx. if facing straight left it needs to be turned say 30 degrees up or down. Could opt for always rotating clockwise to the nearest valid orientation.
+// Direction settings. Interval: 60, resulting in 6 different directions. Hexagons! */
+o_offset = 30 // Depends on the sprite, determining its origin from which it should be rotated. Fx. if facing straight left it needs to be turned say 30 degrees up or down. Could opt for always rotating clockwise to the nearest valid direction.
 o_degrees = 60
 
 
-// The relative offset based off the orientation_offset. If changing to tip topped hexagons, just change the offset!
+// The relative offset based off the direction. If changing to tip topped hexagons, just change the offset!
 // TODO: Actually not used for anything at the moment?
-orientations = [o_offset, o_offset + (o_degrees*1), o_offset + (o_degrees*2), o_offset + (o_degrees*3), o_offset + (o_degrees*4), o_offset + (o_degrees*5)]
+directions = [o_offset, o_offset + (o_degrees*1), o_offset + (o_degrees*2), o_offset + (o_degrees*3), o_offset + (o_degrees*4), o_offset + (o_degrees*5)]
 
 
 /* SFX settings */
@@ -145,10 +145,10 @@ function place_tiles() {
 }
 
 // Maybe just for debugging, doesn't quite position the numbers correctly, but it's almost good enough for debug
-function place_tile_coordinates(tile_h, tile_w, x, y) {
+function place_tile_coordinates(tile_h, tile_w, row, col) {
   let tilesHTML = document.getElementById('tiles') // Get a reference to what will be the element surrounding all the tiles
   let div = document.createElement('div')
-  div.innerHTML = x + ", " + y
+  div.innerHTML =  row + ", " + col
   div.classList.add('tile-coordinate')
   tilesHTML.appendChild(div)
 
@@ -160,19 +160,19 @@ function place_tile_coordinates(tile_h, tile_w, x, y) {
 // For setting up the match
 function place_ships() {
   let shipsHTML = document.getElementById('ships')
-  for (aShip of ships) {
+  for (aShip of j_ships) {
     let div = document.createElement('div')
     div.classList.add('ship')       // Adding the styling all ships have in common
-    div.classList.add(aShip.type)   // I need to add a class so CSS knows which ship model it for selecting an image to show
+    div.classList.add( aShip.type.toLowerCase().replace(/ /g, '-') )   // I need to add a class so CSS knows which ship model it for selecting an image to show. Replace replaces all whitespaces with - to turn them into valid CSS class names, and lowercasing to match our own CSS class naming convention.
     shipsHTML.appendChild(div)
     aShip.el = div // A reference to this particular ship is saved. TODO: Is this even possible?
 
     // Rotate the ship properly 
-    aShip.el.style.transform = "rotate(+" + aShip.orientation + "deg)"; // TODO: The default rotation may vary per ship? Randomize it based off the orientations array? Basically this should be default_rotation + aShip.orientation
+    aShip.el.style.transform = "rotate(+" + aShip.direction + "deg)"; // TODO: The default rotation may vary per ship? Randomize it based off the direction array? Basically this should be default_rotation + aShip.direction
 
     // Put the ship in its proper position on the map
     for (aTile of tiles) {
-      if (aTile.x == aShip.x && aTile.y == aShip.y) {
+      if (aTile.row == aShip.row && aTile.col == aShip.col) {
         let cb = document.getElementById("tiles").getBoundingClientRect();
         let coords = aTile.el.getBoundingClientRect();
         // aShip.el.style.left = aTile.el.style.left
@@ -260,7 +260,7 @@ function ship_selection(clicked_ship) {
 function update_selected_tile() {
 
   for (aTile of tiles) {
-    if (ship != null && aTile.x === ship.x && aTile.y === ship.y) {
+    if (ship != null && aTile.row === ship.row && aTile.col === ship.col) {
       aTile.el.classList.add('selected-ship')
     }
     else {
@@ -273,7 +273,7 @@ function update_selected_tile() {
 /* Ship controls */
 
 function move() {
-    even = (ship.y % 2)? true : false
+    even = (ship.col % 2)? true : false
 
   // 30, 90, 150, 210, 270, 330
 
@@ -283,34 +283,34 @@ function move() {
   // For left and right there are 4 directions to check
   // Moving within the board
     // Updating coordinates
-    if (ship.orientation == 30) {
-      if (even) ship.x--
-      ship.y--
+    if (ship.direction == 30) {
+      if (even) ship.row--
+      ship.col--
     }  // TODO: These algorithms are wrong! It's fx. not always +1 on both axes going south east, as x will be 0 going from an even to an odd row as it's currently tiled
-    else if (ship.orientation == 90) ship.x--
+    else if (ship.direction == 90) ship.row--
     
-    else if (ship.orientation == 150) {
-      if (even) ship.x--
-      ship.y++
+    else if (ship.direction == 150) {
+      if (even) ship.row--
+      ship.col++
     }
     
-    else if (ship.orientation == 210) {
-      if (!even) ship.x++
-      ship.y++
+    else if (ship.direction == 210) {
+      if (!even) ship.row++
+      ship.col++
     }
-    else if (ship.orientation == 270) ship.x++
+    else if (ship.direction == 270) ship.row++
     else { // 330
-      if (!even) ship.x++
-      ship.y--
+      if (!even) ship.row++
+      ship.col--
     }
 
-    if (ship.x < 0 || ship.y < 0 || ship.x > height || ship.y > t_width) move_over_edge()
+    if (ship.row < 0 || ship.col < 0 || ship.row > height || ship.col > t_width) move_over_edge()
     update_selected_tile()
     play_sfx_affirmative()
 
     // Moving based off updated coordinates. Almost verbatim copy of the "placing ships algorithm" (changed aShip to ship), so if all this works I should extract this to a method
     for (aTile of tiles) {
-      if (aTile.x == ship.x && aTile.y == ship.y) {
+      if (aTile.row == ship.row && aTile.col == ship.col) {
         let cb = document.getElementById("tiles").getBoundingClientRect();
         let coords = aTile.el.getBoundingClientRect();
         ship.el.style.left = (coords.left - cb.left + 10) + "px" // The last value was adjusted manually to move the ship from the edge of the tile to the center
@@ -333,11 +333,11 @@ function move_over_edge() {
 
   // // Currently it moves left and up equally, which makes sense at 45 degree angles, but we're using 30 degree angles so it should move further on the x-axis than the y-axis
   // // Calculate the move factoring in angles, like base_move * the distance from the nearest 90 degree angle, and base_distance could be 3 or something? Say (90-30) * 3 and (90-60) * 3?
-  // if (ship.orientation == 30) {
+  // if (ship.direction == 30) {
   //   ship.el.style.left = (curPosLeft - ship_move_distance) + "px"
   //   ship.el.style.top = (curPosTop - ship_move_distance) + "px"
   // }
-  // else if (ship.orientation == 330) {
+  // else if (ship.direction == 330) {
   //   ship.el.style.left = (curPosLeft - ship_move_distance) + "px"
   //   ship.el.style.top = (curPosTop + ship_move_distance) + "px"
   // }
@@ -349,9 +349,9 @@ function move_over_edge() {
 // TURNING
 
 function turn_clockwise() {
-  if (ship.orientation != 330) ship.orientation += o_degrees
-  else ship.orientation = 30
-  // array_offset = orientations.indexOf(cur_orientation)
+  if (ship.direction != 330) ship.direction += o_degrees
+  else ship.direction = 30
+  // array_offset = direction.indexOf(cur_direction)
   // if (array_offset == 5) offset = 0
   // else offset = array_offset + 1
 
@@ -361,8 +361,8 @@ function turn_clockwise() {
 
 function turn_counter_clockwise() {
 
-  if (ship.orientation != 30) ship.orientation -= o_degrees
-  else ship.orientation = 330
+  if (ship.direction != 30) ship.direction -= o_degrees
+  else ship.direction = 330
 
   turn_visual("CCW")
 }
@@ -371,13 +371,13 @@ function turn_counter_clockwise() {
 // TODO: I think it would be easier to decouple the rotation as received from Java from the visual representation of the rotation, as chaging the latter might not mean changing the former
 // It's async because we need to sleep while the ship rotates, before it moves and the best practice way of doing this is via a promise (in a thread)
 async function turn_visual(direction) {
-  cur_orientation = parseInt( ship.el.style.transform.match(/-?\d+/)[0] ) // NOTE: This works as long as I don't use transform for setting anything besides rotation. The last part extracts the first number from the string
+  cur_direction = parseInt( ship.el.style.transform.match(/-?\d+/)[0] ) // NOTE: This works as long as I don't use transform for setting anything besides rotation. The last part extracts the first number from the string
 
   if (direction == "CW") {
-    ship.el.style.transform = 'rotate(' + (cur_orientation + o_degrees) + 'deg)' // Originally I wanted to wrap back to zero once we got over 360 degrees, but then instead of rotating the shortest way round it rotates the long one...
+    ship.el.style.transform = 'rotate(' + (cur_direction + o_degrees) + 'deg)' // Originally I wanted to wrap back to zero once we got over 360 degrees, but then instead of rotating the shortest way round it rotates the long one...
   }
   else {
-    ship.el.style.transform = 'rotate(' + (cur_orientation - o_degrees) + 'deg)'
+    ship.el.style.transform = 'rotate(' + (cur_direction - o_degrees) + 'deg)'
   }
 
   //BUG!: When await is called you can select a ship, press to rotate, then select another ship before sleep is over, and the newly selected ship moves instead.
@@ -386,6 +386,7 @@ async function turn_visual(direction) {
   move()
 }
 
+// Helper method for one of our ways of visually turning a ship
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }

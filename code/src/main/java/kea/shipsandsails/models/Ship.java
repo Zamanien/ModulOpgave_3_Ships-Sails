@@ -6,8 +6,8 @@ public class Ship {
     private String type;
     private String nationality;
     private String name;
-    private int x;
-    private int y;
+    private int row;
+    private int col;
 
     private int direction;             // ENUM, N, NE, SE, S, SW, NW
     private int speed;                 // change: speed last round +            / - calculated change
@@ -120,20 +120,20 @@ public class Ship {
         this.name = name;
     }
 
-    public int getX() {
-      return this.x;
+    public int getRow() {
+      return this.row;
     }
 
-    public int getY() {
-      return this.y;
+    public int getCol() {
+      return this.col;
     }
 
-    public void setX(int x) {
-      this.x = x;
+    public void setRow(int row) {
+      this.row = row;
     }
 
-    public void setY(int y) {
-      this.y = y;
+    public void setCol(int col) {
+      this.col = col;
     }
 
     // public Coordinate getCoordinate() {

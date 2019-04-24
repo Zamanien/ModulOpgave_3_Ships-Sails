@@ -36,24 +36,24 @@ public class MoveService implements IMove {
     private void newPosition(Ship ship) {
         switch (ship.getDirection()) {
             case 0:
-                ship.setX(ship.getX() - 1);
+                ship.setRow(ship.getRow() - 1);
                 break;
             case 1:
-                ship.setX(ship.getX() - 1);
-                ship.setY(ship.getY() + 1);
+                ship.setRow(ship.getRow() - 1);
+                ship.setCol(ship.getCol() + 1);
                 break;
             case 2:
-                ship.setY(ship.getY() + 1);
+                ship.setCol(ship.getCol() + 1);
                 break;
             case 3:
-                ship.setX(ship.getX() + 1);
+                ship.setRow(ship.getRow() + 1);
                 break;
             case 4:
-                ship.setY(ship.getY() - 1);
+                ship.setCol(ship.getCol() - 1);
                 break;
             case 5:
-                ship.setX(ship.getX() - 1);
-                ship.setY(ship.getY() - 1);
+                ship.setRow(ship.getRow() - 1);
+                ship.setCol(ship.getCol() - 1);
                 break;
         }
 
@@ -63,8 +63,8 @@ public class MoveService implements IMove {
 
     // selected ship still on board
     private void onBoard(Ship ship, Scenario scenario) {
-        if (!((ship.getX() >= 0 && ship.getX() < scenario.getMapWidth()) &&
-                (ship.getY() >= 0 && ship.getY() < scenario.getMapHeight()))) {
+        if (!((ship.getRow() >= 0 && ship.getRow() < scenario.getMapWidth()) &&
+                (ship.getCol() >= 0 && ship.getCol() < scenario.getMapHeight()))) {
             ship = null;
         }
     }
