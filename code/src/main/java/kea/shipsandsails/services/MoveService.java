@@ -1,7 +1,6 @@
 package kea.shipsandsails.services;
 
 import kea.shipsandsails.controllers.HomeController;
-import kea.shipsandsails.models.Direction;
 import kea.shipsandsails.models.Order;
 import kea.shipsandsails.models.Ship;
 import kea.shipsandsails.models.Weather;
@@ -24,44 +23,43 @@ public class MoveService implements IMove {
 
     // rotate selected ship
     private void newRotation(Ship ship, int rotateDirection) {
-        int index = ship.getDirection().ordinal() + rotateDirection;
-        Direction[] directionArray = {Direction.N, Direction.NE, Direction.SE, Direction.S, Direction.SW, Direction.NW};
-        if (!(index >= 0 && index < directionArray.length)) {
-            index = Math.abs(directionArray.length - Math.abs(index));
+        int index = ship.getDirection() + rotateDirection;
+        if (!(index >= 0 && index < 6)) {
+            index = Math.abs(6 - Math.abs(index));
         }
-        ship.setDirection(directionArray[index]);
+        ship.setDirection(index);
     }
 
     // move selected ship
     private void newPosition(Ship ship) {
         switch (ship.getDirection()) {
-            case N:
-                ship.getCoordinate().setX(ship.getCoordinate().getX() - 1);
+            case 0:
+                ship.setX(ship.getX() - 1);
                 break;
-            case NE:
-                ship.getCoordinate().setX(ship.getCoordinate().getX() - 1);
-                ship.getCoordinate().setY(ship.getCoordinate().getY() + 1);
+            case 1:
+                ship.setX(ship.getX() - 1);
+                ship.setY(ship.getY() + 1);
                 break;
-            case SE:
-                ship.getCoordinate().setY(ship.getCoordinate().getY() + 1);
+            case 2:
+                ship.setY(ship.getY() + 1);
                 break;
-            case S:
-                ship.getCoordinate().setX(ship.getCoordinate().getX() + 1);
+            case 3:
+                ship.setX(ship.getX() + 1);
                 break;
-            case SW:
-                ship.getCoordinate().setY(ship.getCoordinate().getY() - 1);
+            case 4:
+                ship.setY(ship.getY() - 1);
                 break;
-            case NW:
-                ship.getCoordinate().setX(ship.getCoordinate().getX() - 1);
-                ship.getCoordinate().setY(ship.getCoordinate().getY() - 1);
+            case 5:
+                ship.setX(ship.getX() - 1);
+                ship.setY(ship.getY() - 1);
                 break;
         }
     }
 
     // selected ship still on board
     private void onBoard(Ship ship) {
-        if (!((ship.getCoordinate().getX() >= 0 && ship.getCoordinate().getX() < HomeController.scenario.getMapWidth()) &&
-                (ship.getCoordinate().getY() >= 0 && ship.getCoordinate().getY() < HomeController.scenario.getMapHeight()))) {
+        if (!((ship.getX() >= 0 && ship.getX() < HomeController.scenario.getMapWidth()) &&
+                (ship.getY() >= 0 && ship.getY() < HomeController.scenario.getMapHeight()))) {
             ship = null;
         }
     }
