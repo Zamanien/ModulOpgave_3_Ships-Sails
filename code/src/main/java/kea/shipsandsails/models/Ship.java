@@ -8,15 +8,20 @@ public class Ship {
     private String name;
     private int x;
     private int y;
+
     private int direction;             // ENUM, N, NE, SE, S, SW, NW
     private int speed;                 // change: speed last round +            / - calculated change
-    private int hull_health;           // 0 - 100%
-    private int sail_health;           // 0 - 100%
     private int sailors;               // 0 - MAX_SAILORS
-    private int load;                  // load time
-    private int current_ammunition_type; // 0=canonball, 1=chainball, 2=grapeshot
+    private int sail_health;           // 0 - 100%
+    private int current_sails_up;
+    private int sails_total;
     private int moves_remaining;        // How many moves the ship has left. 0 = none
     private int rotations_remaining;    // How many rotations the ship has left. 0 = none
+
+    private int hull_health;           // 0 - 100%
+    private int load;                  // load time
+    private int current_ammunition_type; // 0=canonball, 1=chainball, 2=grapeshot
+
 
     // All the values have the same starting values for all shiptypes are set here
     public Ship() {
@@ -25,8 +30,6 @@ public class Ship {
       this.sail_health = 100;
       this.load = 0;
       this.current_ammunition_type = 0;
-      this.moves_remaining = 0;
-      this.rotations_remaining = 0;
     } // Required by Spring, at least for models
 
     // public Ship(int shipId, int shipType, String nationality, String name, int x, int direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
@@ -43,6 +46,23 @@ public class Ship {
     //     this.load = load;
     //     this.currentAmmunitionType = currentAmmunitionType;
     // }
+
+    public int getCurrentSailsUp() {
+      return current_sails_up;
+    }
+
+    public int getSailsTotal() {
+      return sails_total;
+    }
+
+    public void setCurrentSailsUp(int currentSailsUp) {
+      this.current_sails_up = currentSailsUp;
+    }
+
+    public void setSailsTotal(int sailsTotal) {
+      this.sails_total = sailsTotal;
+    }
+
 
     public int getMovesRemaining() {
       return moves_remaining;

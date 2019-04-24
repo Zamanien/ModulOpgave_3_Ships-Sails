@@ -2,6 +2,7 @@ package kea.shipsandsails.models;
 
 public class ShipType {
 
+  // Starting values for ships that vary per type
   private String name;
   private int sailors;
   private int sailors_needed_on_guns;
