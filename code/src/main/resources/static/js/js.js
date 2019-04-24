@@ -66,9 +66,9 @@ var sfx_volume = 0.6
 
 /* Tiles / World settings */
 
-const width = 6                   // It makes 1 less than twice the amount of this, if not zero indexed
-const height = 5                  // 1 lower than the total number of tiles from top to bottom, if not zero indexed
-const t_width = width * 2 - 2     // Total width and heights, starting from 0
+const width = 10                   // It makes 1 less than twice the amount of this, if not zero indexed
+const height = 6                  // 1 lower than the total number of tiles from top to bottom, if not zero indexed
+const t_width = width * 2 - 2     // Total width, starting from 0
 
 /* Ship settings */
 
@@ -124,39 +124,24 @@ function place_tiles() {
   // Add the odd columns of tiles
   for (var w = 0; w < width; w++) {
 
-    for (var h = 0; h < height+1; h++) {
+    for (var h = 0; h < height; h++) {
       
       let div = document.createElement('div')
-      div.classList.add('basic-tile')  // Add basic-tile class to the element
+      div.classList.add('tile', 'basic-tile')  // Add basic-tile class to the element
       tilesHTML.appendChild(div)       // Add HTML element to the page
-      tiles.push( new Tile(div, h, w*2) ) // Add tile to the tile array: 0,0 - 0,2 - 0,4
-      div.style.top  += (h * tile_offset_height) + "px"
-      div.style.left += (w * tile_offset_width)  + "px"
+      tiles.push( new Tile(div, h, w) ) // Add tile to the tile array: 0,0 - 0,2 - 0,4
+
+      var val = h * tile_offset_height
+      div.style.top  += val + "px"
+      div.style.left += (w * tile_offset_width/2)  + "px"
+      if ( w % 2 == 0) {
+        new_h = Math.floor(tile_offset_height / 2) // Negative to move the tile upwards by half the tile height
+        div.style.top  = val + new_h + "px"
       // place_tile_coordinates((h * tile_offset_height), (w * tile_offset_width), h, w*2)
+      }
     }
   }
 
-
-  // Add the even columns of tiles (done independently since they're offset from each other)
-  for (var w = 0; w < (width-1); w++) {
-
-    for (var h = 0; h < (height+1); h++) {
-      
-      let div = document.createElement('div')
-      div.classList.add('basic-tile')
-
-      // Calculating offsets for the first two tiles, which the rest will be positioned based on
-      new_h = Math.floor(tile_offset_height / 2) * -1 // Negative to move the tile upwards by half the tile height
-      new_w = Math.floor(tile_offset_width / 2)
-
-      tilesHTML.appendChild(div)
-      tiles.push( new Tile(div, h, (w+1)*2-1) ) // Add tile to the tile array: 0,1 - 0,3 - 0,5
-      
-      div.style.top  += new_h + (h * tile_offset_height) + "px"
-      div.style.left += new_w + (w * tile_offset_width)  + "px"
-      // place_tile_coordinates(new_h + (h * tile_offset_height), new_w + (w * tile_offset_width), h, (w+1)*2-1)
-    }
-  }
 }
 
 // Maybe just for debugging, doesn't quite position the numbers correctly, but it's almost good enough for debug
@@ -192,8 +177,8 @@ function place_ships() {
         let coords = aTile.el.getBoundingClientRect();
         // aShip.el.style.left = aTile.el.style.left
         // aShip.el.style.top  = aTile.el.style.top
-        aShip.el.style.left = (coords.left - cb.left + 35) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
-        aShip.el.style.top  = (coords.top - cb.top + 20) + "px"
+        aShip.el.style.left = (coords.left - cb.left + 10) + "px" // 40 was adjusted manually to move the ship from the edge of the tile to the center
+        aShip.el.style.top  = (coords.top - cb.top) + "px"
         break
       }
     }
@@ -257,7 +242,6 @@ function ship_selection(clicked_ship) {
     // Only allow the user to select the ships of their own nationality
     if (aShip.el == clicked_ship && aShip.nationality == player) { 
       ship = aShip
-      aShip.el.classList.add('ship-selected')
 
       /* Update health bars */
       document.getElementById('sailors').style.width = ship.sailors + "%"
@@ -266,10 +250,21 @@ function ship_selection(clicked_ship) {
 
       display_current_ammunition() // Update the UI to show the currently loaded ammunition for the current ship
 
+      update_selected_tile()
+
       play_sfx_ready()
     }
+  }
+}
+
+function update_selected_tile() {
+
+  for (aTile of tiles) {
+    if (aTile.x === ship.x && aTile.y === ship.y) {
+      aTile.el.classList.add('selected-ship')
+    }
     else {
-      aShip.el.classList.remove('ship-selected') // Remove selected from all other ships
+      aTile.el.classList.remove('selected-ship') // Remove selected from all other ships
     }
   }
 }
@@ -310,6 +305,7 @@ function move() {
     }
 
     if (ship.x < 0 || ship.y < 0 || ship.x > height || ship.y > t_width) move_over_edge()
+    update_selected_tile()
     play_sfx_affirmative()
 
     // Moving based off updated coordinates. Almost verbatim copy of the "placing ships algorithm" (changed aShip to ship), so if all this works I should extract this to a method
@@ -317,8 +313,8 @@ function move() {
       if (aTile.x == ship.x && aTile.y == ship.y) {
         let cb = document.getElementById("tiles").getBoundingClientRect();
         let coords = aTile.el.getBoundingClientRect();
-        ship.el.style.left = (coords.left - cb.left + 35) + "px" // The last value was adjusted manually to move the ship from the edge of the tile to the center
-        ship.el.style.top  = (coords.top - cb.top + 20) + "px"
+        ship.el.style.left = (coords.left - cb.left + 10) + "px" // The last value was adjusted manually to move the ship from the edge of the tile to the center
+        ship.el.style.top  = (coords.top - cb.top) + "px"
         break
       }
     }
