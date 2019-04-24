@@ -6,8 +6,7 @@ public class ShipType {
   private int sailors;
   private int sailors_needed_on_guns;
   private int sailors_needed_on_sails;
-  private int rows_of_guns;
-  private int guns_per_row;
+  private int guns_per_side;  // (guns_per_row * rows_of_guns) / 2
   private int hull_condition;
   private int max_sails_up;
   private int sails_total;

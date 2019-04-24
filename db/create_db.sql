@@ -28,8 +28,7 @@ CREATE TABLE ship_types (
   sailors INT NOT NULL, -- number of sailors at the start of the game
   sailors_needed_on_guns INT NOT NULL,
   sailors_needed_on_sails INT NOT NULL,
-  rows_of_guns INT NOT NULL,
-  guns_per_row INT NOT NULL,
+  guns_per_side INT NOT NULL, -- (guns_per_row * rows_of_guns) / 2
   hull_condition INT NOT NULL, -- hull condition at the start of the game
   max_sails_up INT NOT NULL,
   sails_total INT NOT NULL, -- total number of sails at the start of the game

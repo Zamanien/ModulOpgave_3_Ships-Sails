@@ -21,14 +21,14 @@ INSERT INTO scenarios (name, player1, player2, map_width, map_height) VALUES ('X
 
 
 
-INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , rows_of_guns , guns_per_row , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
-VALUES ('Brig'               , 60      , 24                     , 24                      , 1            , 8            , 25             , 4            , 30          , 2         , 1                , 1);
+INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , guns_per_side , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
+VALUES ('Brig'               , 60      , 24                     , 24                      , 4            , 8            , 25             , 4            , 30          , 2         , 1                , 1);
 
-INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , rows_of_guns , guns_per_row , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
-VALUES ('Ship of the Line'   , 160     , 48                     , 60                      , 2            , 16           , 60             , 10           , 60          , 5         , 2                , 2);
+INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , guns_per_side , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
+VALUES ('Ship of the Line'   , 160     , 48                     , 60                      , 16            , 60             , 10           , 60          , 5         , 2                , 2);
 
-INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , rows_of_guns , guns_per_row , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
-VALUES ('Man at War'         , 340     , 84                     , 144                     , 3            , 28           , 140            , 24           , 80          , 4         , 1                , 1);
+INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed_on_sails , guns_per_side , hull_condition , max_sails_up , sails_total , max_speed , max_speed_change , max_rotate)
+VALUES ('Man at War'         , 340     , 84                     , 144                     , 42             , 140            , 24           , 80          , 4         , 1                , 1);
 
 
 

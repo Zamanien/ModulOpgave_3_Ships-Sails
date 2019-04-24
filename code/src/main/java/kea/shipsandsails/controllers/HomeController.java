@@ -50,9 +50,6 @@ public class HomeController {
   // The game itself
   @GetMapping("/game")
   public String game(Model model) {
-    model.addAttribute("scenario", scenario);
-    model.addAttribute("ship_types", shipTypes);
-    model.addAttribute("ships", ships);
 
     // Mainly for testing
     scenario = scs.fetchScenario("X Marks the Spot");
@@ -63,6 +60,16 @@ public class HomeController {
 
     shipTypes = shtys.fetchShipTypes();
     // System.out.println( shipTypes.get(1).getName() );
+
+    for (var ship : ships) { 
+      System.out.println(ship.getShipType());
+      System.out.println(ship.getNationality());
+      System.out.println();
+    }
+    
+    model.addAttribute("scenario", scenario);
+    model.addAttribute("ship_types", shipTypes);
+    model.addAttribute("ships", ships);
 
     return "game";
   }
