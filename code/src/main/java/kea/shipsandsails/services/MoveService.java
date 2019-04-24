@@ -1,10 +1,6 @@
 package kea.shipsandsails.services;
 
-import kea.shipsandsails.controllers.HomeController;
-import kea.shipsandsails.models.Order;
-import kea.shipsandsails.models.Ship;
-import kea.shipsandsails.models.ShipType;
-import kea.shipsandsails.models.Weather;
+import kea.shipsandsails.models.*;
 
 import java.util.List;
 
@@ -15,10 +11,10 @@ public class MoveService implements IMove {
     }
 
     // move selected ship to new position and direction
-    public Ship moveShip(Ship ship, int rotateDirection) {
+    public Ship moveShip(Ship ship, int rotateDirection, Scenario scenario) {
         newRotation(ship, rotateDirection);
         newPosition(ship);
-        onBoard(ship);
+        onBoard(ship, scenario);
         return ship;
     }
 
@@ -66,9 +62,9 @@ public class MoveService implements IMove {
     }
 
     // selected ship still on board
-    private void onBoard(Ship ship) {
-        if (!((ship.getX() >= 0 && ship.getX() < HomeController.scenario.getMapWidth()) &&
-                (ship.getY() >= 0 && ship.getY() < HomeController.scenario.getMapHeight()))) {
+    private void onBoard(Ship ship, Scenario scenario) {
+        if (!((ship.getX() >= 0 && ship.getX() < scenario.getMapWidth()) &&
+                (ship.getY() >= 0 && ship.getY() < scenario.getMapHeight()))) {
             ship = null;
         }
     }
@@ -81,33 +77,32 @@ public class MoveService implements IMove {
     }
 }
 
-
-
 /*
 public boolean movePossible(Ship ship) {
-    return (ship.movesRemaining() - wind > 0);
 
-    tjekke om der drejes og er flere turnings left
+    // hvor meget modstand giver vinden
+    direction / wind;
 
-    wind i forhold til egen direction
+    // kan der rykkes mere
+    moveRemaining() - wind > 0;
+    // hvis der drejes, tjek for antal rotations tilbage
+    rotationsRemaining() > 0;
+
 }
-
-
 
 
 
 max move remaining:
 
-    min:
-
-    max speed
-    previousMove + maxSpeedChange - sail quality
+    min af:
+    max speed - sail
+    previousMove + maxSpeedChange - sail
 
 min move remaning:
 
-    max:
-
-    previousMove - maxSpeedChange
+    max af:
+    0
+    previousMove - maxSpeedChange - sail
 
 
 
