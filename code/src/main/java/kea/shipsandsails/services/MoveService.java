@@ -76,8 +76,8 @@ public class MoveService implements IMove {
     // this method belongs with AttackService
     // calculates sail health
     public void newSailHealth(Ship ship, ShipType shipType) {
-        int sailsUp = Math.min(ship.getSailors() % 6, ship.getCurrentSailsUp());
-        ship.setSail_health(shipType.getMaxSailsUp() / sailsUp);
+        double sailsUp = Math.min(ship.getSailors() % 6, ship.getCurrentSailsUp());
+        ship.setSailHealth(sailsUp / shipType.getMaxSailsUp());
     }
 }
 
