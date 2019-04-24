@@ -67,8 +67,9 @@
           <div id='infobox'>
 
             <h2>Ship info</h2>
-            <p>Type:</p>
-            <p>Name:</p>
+            <p>Nationality:</p>
+            <p>Moves remaining:</p>
+            <p>Rotations remaining:</p>
 
             <div id='stat-bars'>
               <div class="progress">
@@ -110,10 +111,21 @@
 
     </div>
 
+    <!-- Just used for passing data from Spring to JS -->
+    <!-- <div id='data-passing' style='display: block'> -->
+      
+    <!--   <tr th:each="j_ship : ${j_ships}"> -->
+    <!--     <td th:text="${j_ship.type}"></td> --> 
+    <!--   </tr> -->
     
-
-    <script th:src='@{js/js.js}' charset="utf-8">
+    <!-- </div> -->
+    
+    <script>
+    var showtext = "[[${showTextFromJavaController}]]";
+    console.log(showtext);
     </script>
+
+    <script th:src='@{js/js.js}' charset="utf-8"></script>
 
   </body>
 </html>

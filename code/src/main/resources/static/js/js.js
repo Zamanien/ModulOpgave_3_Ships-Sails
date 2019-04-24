@@ -260,7 +260,7 @@ function ship_selection(clicked_ship) {
 function update_selected_tile() {
 
   for (aTile of tiles) {
-    if (aTile.x === ship.x && aTile.y === ship.y) {
+    if (ship != null && aTile.x === ship.x && aTile.y === ship.y) {
       aTile.el.classList.add('selected-ship')
     }
     else {
@@ -325,6 +325,7 @@ function move_over_edge() {
   // We need to move it first for visuals' sake, but this is helpful for faster debugging
   ship.el.parentElement.removeChild(ship.el) 
   ship = null
+  update_selected_tile()
 
   // // Get current position
   // curPosLeft = parseInt(ship.el.style.left)
@@ -379,7 +380,9 @@ async function turn_visual(direction) {
     ship.el.style.transform = 'rotate(' + (cur_orientation - o_degrees) + 'deg)'
   }
 
-  await sleep(1700); // Whatever the transition duration is (ie. the time it takes to rotate)
+  //BUG!: When await is called you can select a ship, press to rotate, then select another ship before sleep is over, and the newly selected ship moves instead.
+  if (ship.type != 'man-at-war') await sleep(1700); // Whatever the transition duration is (ie. the time it takes to rotate).
+
   move()
 }
 

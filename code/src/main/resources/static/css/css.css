@@ -105,17 +105,14 @@ h2 {
 /* Styling differing between ship models */
 .brig {
   background-image: url("../img/ship-types/brig.svg");
-  /* background-position: -70px -75px; /1* Default position, facing left *1/ */
 }
 
 .ship-of-the-line {
   background-image: url("../img/ship-types/ship-of-the-line.svg");
-  /* background-position: -85px -75px; /1* Default position, facing left *1/ */
 }
 
 .man-at-war {
   background-image: url("../img/ship-types/man-at-war.svg");
-  /* background-position: -70px -85px; /1* Default position, facing left *1/ */
 }
 
 /* Stat bars for sailors, hull */
