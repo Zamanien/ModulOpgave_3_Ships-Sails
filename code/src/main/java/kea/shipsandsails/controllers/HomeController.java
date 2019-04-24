@@ -62,7 +62,7 @@ public class HomeController {
     // System.out.println( shipTypes.get(1).getName() );
 
     for (var ship : ships) { 
-      System.out.println(ship.getShipType());
+      System.out.println(ship.getType());
       System.out.println(ship.getNationality());
       System.out.println();
     }

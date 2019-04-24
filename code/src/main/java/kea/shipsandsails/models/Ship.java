@@ -2,22 +2,29 @@ package kea.shipsandsails.models;
 
 public class Ship {
 
-    private int shipId;
-    private int shipType;
+    private int id;
+    private int type;
     private String nationality;
     private String name;
-    private Coordinate coordinate;
-    private Direction direction; //ENUM, N, NE, SE, S, SW, NW
-    private int speed; //change: speed last round +/- calculated change
-    private int hull_health; //0 - 100%
-    private int sail_health; //0 - 100%
-    private int sailors; //0 - MAX_SAILORS
-    private int load; //load time
-    private int currentAmmunitionType; //0=canonball, 1=chainball, 2=grapeshot
+    private int x;
+    private int y;
+    private int direction;             // ENUM, N, NE, SE, S, SW, NW
+    private int speed;                 // change: speed last round +            / - calculated change
+    private int hull_health;           // 0 - 100%
+    private int sail_health;           // 0 - 100%
+    private int sailors;               // 0 - MAX_SAILORS
+    private int load;                  // load time
+    private int currentAmmunitionType; // 0=canonball, 1=chainball, 2=grapeshot
 
-    // public Ship() {} // Required by Spring, at least for models
+    public Ship() {
+      this.hull_health = 100;
+      this.sail_health = 100;
+      this.load = 0;
+      this.currentAmmunitionType = 0;
+      this.speed = 0;
+    } // Required by Spring, at least for models
 
-    // public Ship(int shipId, int shipType, String nationality, String name, Coordinate coordinate, Direction direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
+    // public Ship(int shipId, int shipType, String nationality, String name, int x, int direction, int speed, int hull_health, int sail_health, int sailors, int load, int currentAmmunitionType) {
     //     this.shipId = shipId;
     //     this.shipType = shipType;
     //     this.nationality = nationality;
@@ -40,20 +47,20 @@ public class Ship {
         this.currentAmmunitionType = currentAmmunitionType;
     }
 
-    public int getShipId() {
-        return shipId;
+    public int getId() {
+        return id;
     }
 
-    public void setShipId(int shipId) {
-        this.shipId = shipId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getShipType() {
-        return shipType;
+    public int getType() {
+        return type;
     }
 
-    public void setShipType(int shipType) {
-        this.shipType = shipType;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getNationality() {
@@ -72,19 +79,35 @@ public class Ship {
         this.name = name;
     }
 
-    public Coordinate getCoordinate() {
-        return coordinate;
+    public int getX() {
+      return this.x;
     }
 
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
+    public int getY() {
+      return this.y;
     }
 
-    public Direction getDirection() {
+    public void setX(int x) {
+      this.x = x;
+    }
+
+    public void setY(int y) {
+      this.y = y;
+    }
+
+    // public Coordinate getCoordinate() {
+    //     return coordinate;
+    // }
+
+    // public void setCoordinate(Coordinate coordinate) {
+    //     this.coordinate = coordinate;
+    // }
+
+    public int getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public void setDirection(int direction) {
         this.direction = direction;
     }
 

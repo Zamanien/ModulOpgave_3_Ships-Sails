@@ -16,12 +16,10 @@ public class ShipType {
 
   // public ShipType() {} // Required by Spring, at least for models
 
-  // public ShipType(int sailors, int sailors_needed_on_guns, int sailors_needed_on_sails, int rows_of_guns, int guns_per_row, int hull_condition, int max_sails_up, int sails_total, int max_speed, int max_speed_change, int max_rotate) {
+  // public ShipType(int sailors, int sailors_needed_on_guns, int sailors_needed_on_sails, int hull_condition, int max_sails_up, int sails_total, int max_speed, int max_speed_change, int max_rotate) {
   //   this.sailors = sailors;
   //   this.sailors_needed_on_guns = sailors_needed_on_guns;
   //   this.sailors_needed_on_sails = sailors_needed_on_sails;
-  //   this.rows_of_guns = rows_of_guns;
-  //   this.guns_per_row = guns_per_row;
   //   this.hull_condition = hull_condition;
   //   this.max_sails_up = max_sails_up;
   //   this.sails_total = sails_total; // All sails incl. or excl. max_sails_up?
@@ -46,12 +44,12 @@ public class ShipType {
     return sailors_needed_on_sails;
   }
 
-  public int getRowsOfGuns() {
-    return rows_of_guns;
+  public int getGunsPerSide() {
+    return guns_per_side;
   }
 
-  public int getGunsPerRow() {
-    return guns_per_row;
+  public void setGunsPerSide(int gunsPerSide) {
+    this.guns_per_side = gunsPerSide;
   }
 
   public int gethullCondition() {
@@ -92,14 +90,6 @@ public class ShipType {
 
   public void setSailorsNeededOnSails(int sailorsNeededOnSails) {
     this.sailors_needed_on_sails = sailorsNeededOnSails;
-  }
-
-  public void setRowsOfGuns(int rowsOfGuns) {
-    this.rows_of_guns = rowsOfGuns;
-  }
-
-  public void setGunsPerRow(int gunsPerRow) {
-    this.guns_per_row = gunsPerRow;
   }
 
   public void setHullCondition(int hullCondition) {
