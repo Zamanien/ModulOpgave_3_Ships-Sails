@@ -62,6 +62,7 @@ button:hover {
 
 #controls {
   margin-bottom: 175px;
+  z-index: 2;
 }
 
 /* Tile(s) */

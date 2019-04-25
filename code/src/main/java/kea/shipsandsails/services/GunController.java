@@ -84,7 +84,7 @@ public class GunController implements IAttack
             double firingValue = weHitTheTarget.getFiringValueNumbers() * guns;
             if(myAmmunition.checkWeaponType() == 1)
             {
-                remainingHealth[0] = ship.getHull_health() - firingValue;
+                remainingHealth[0] = ship.getHullHealth() - firingValue;
             }
             if (myAmmunition.checkWeaponType() == 2)
             {
