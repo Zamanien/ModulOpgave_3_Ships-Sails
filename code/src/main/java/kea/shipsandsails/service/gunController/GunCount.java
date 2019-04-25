@@ -1,6 +1,7 @@
 package kea.shipsandsails.service.gunController;
 
-import dk.kea.shipgame.Model.Ship;
+
+import kea.shipsandsails.models.Ship;
 
 public class GunCount
 {
@@ -17,6 +18,7 @@ public class GunCount
 
         if(currentAmountofSailors >= 3 && currentAmountofSailors <= currentAmountOfGuns)
         {
+            currentAmountOfGuns = currentAmountofSailors;
             return currentAmountOfGuns;
         }
 

@@ -39,10 +39,8 @@ public class GunType
             System.out.println("1. Cannonball");
             System.out.println("2. Chain");
             System.out.println("3. Grape shot");
-            Scanner scan = new Scanner(System.in);
-            String pause = scan.nextLine();
             checkWeaponType();
-            System.out.println("Your current weapon type is: " + pause);
+
 
         }
 
