@@ -1,22 +1,32 @@
 package kea.shipsandsails.models;
 
 public class Weather {
-    private Direction windDirection; //ENUM N, NE, SE, S, SW, NW
-    private int windSpeed; //0 - 5 -- windSpeed is constant and not changing. 
+    private int windDirection; //ENUM N, NE, SE, S, SW, NW bruges ikke længere.
+    private int windSpeed; //0 - 5 -- windSpeed is constant and not changing. Bruges ikke.
+    private boolean firstWeather = true;
 
     public Weather() {
     }
 
-    public Weather(Direction windDirection, int windSpeed) {
+    public Weather(int windDirection, int windSpeed, boolean firstWeather) {
         this.windDirection = windDirection;
         this.windSpeed = windSpeed;
+        this.firstWeather = firstWeather;
     }
 
-    public Direction getWindDirection() {
+    public boolean getFirstWeather() {
+        return firstWeather;
+    }
+
+    public void setFirstWeather(boolean firstWeather) {
+        this.firstWeather = firstWeather;
+    }
+
+    public int getWindDirection() {
         return windDirection;
     }
 
-    public void setWindDirection(Direction windDirection) {
+    public void setWindDirection(int windDirection) {
         this.windDirection = windDirection;
     }
 

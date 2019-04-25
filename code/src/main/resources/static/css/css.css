@@ -63,12 +63,19 @@ h2 {
 /* Tile(s) */
 
 #tiles {
-  margin-top: 65px;
+  /* margin-top: 0px; */
 }
 
 .basic-tile {
   background: url('../img/basic_tile.svg');
   /* background: url('../img/easter2_tile.svg'); /1* Nightmare mode *1/ */
+}
+
+.selected-ship {
+  background: url('../img/selected_tile.svg');
+}
+
+.tile {
   background-size: 139px 120px;
   position: absolute;
   width:  139px;
@@ -85,6 +92,10 @@ h2 {
 /* Styling common to all ships */
 .ship {
   background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 120px;
+  width: 120px;
   position: absolute;
   /* Actually positioned via JS */
   transition: transform 2s, border 0s, left 1.7s, top 1.7s;
@@ -94,37 +105,15 @@ h2 {
 /* Styling differing between ship models */
 .brig {
   background-image: url("../img/ship-types/brig.svg");
-  /* background-position: 0px -120px; /1* Default position, facing left *1/ */
-  height: 90px;
-  width: 90px;
-  background-size:240% 240%;
-  background-position: -70px -75px; /* Default position, facing left */
 }
 
 .ship-of-the-line {
   background-image: url("../img/ship-types/ship-of-the-line.svg");
-  /* background-position: 0px -120px; /1* Default position, facing left *1/ */
-  height: 90px;
-  width: 90px;
-  background-size:240% 240%;
-  background-position: -75px -75px; /* Default position, facing left */
 }
 
 .man-at-war {
   background-image: url("../img/ship-types/man-at-war.svg");
-  /* background-position: 0px -120px; /1* Default position, facing left *1/ */
-  height: 90px;
-  width: 90px;
-  background-size:240% 240%;
-  background-position: -70px -85px; /* Default position, facing left */
 }
-
-.ship-selected {
-  border-radius: 5px;
-  /* box-shadow: 10px 10px; */
-  border: 3px dashed #ccc;
-}
-
 
 /* Stat bars for sailors, hull */
 #stat-bars {

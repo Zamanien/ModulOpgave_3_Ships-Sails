@@ -28,8 +28,7 @@ CREATE TABLE ship_types (
   sailors INT NOT NULL, -- number of sailors at the start of the game
   sailors_needed_on_guns INT NOT NULL,
   sailors_needed_on_sails INT NOT NULL,
-  rows_of_guns INT NOT NULL,
-  guns_per_row INT NOT NULL,
+  guns_per_side INT NOT NULL, -- (guns_per_row * rows_of_guns) / 2
   hull_condition INT NOT NULL, -- hull condition at the start of the game
   max_sails_up INT NOT NULL,
   sails_total INT NOT NULL, -- total number of sails at the start of the game
@@ -40,12 +39,12 @@ CREATE TABLE ship_types (
 
 -- Describes the specific ships in a scenario
 CREATE TABLE ships (
+  scenario VARCHAR(60) NOT NULL, -- What scenario does this ship belong to
   id INT PRIMARY KEY AUTO_INCREMENT,
   type VARCHAR(60) NOT NULL,             -- the ship type
-  scenario VARCHAR(60) NOT NULL, -- What scenario does this ship belong to
   nationality VARCHAR(60) NOT NULL,  -- Which player controls this ship
-  position_x INT NOT NULL,       -- Starting coordinates
-  position_y INT NOT NULL,
+  row INT NOT NULL,       -- Starting coordinates
+  col INT NOT NULL,
   direction TINYINT NOT NULL,    -- The direction it's facing at the start
 
   CHECK (direction BETWEEN 0 AND 5), -- matching the enum numbers, which are zero indexed

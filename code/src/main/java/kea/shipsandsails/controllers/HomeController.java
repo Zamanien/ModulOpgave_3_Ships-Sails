@@ -50,19 +50,39 @@ public class HomeController {
   // The game itself
   @GetMapping("/game")
   public String game(Model model) {
-    model.addAttribute("scenario", scenario);
-    model.addAttribute("ship_types", shipTypes);
-    model.addAttribute("ships", ships);
 
-    // Mainly for testing
+    // INIT
     scenario = scs.fetchScenario("X Marks the Spot");
-    // System.out.println( scenario.getName() );
-
     ships = shs.fetchScenarioShips("X Marks the Spot");
-    // System.out.println(ships.get(1).getNationality());
-
     shipTypes = shtys.fetchShipTypes();
+
+    // TESTING
+    // Setting starting values specific to each ship type on the ships
+    for (var ship : ships) {
+      for (var shipType : shipTypes) {
+        if ( ship.getType() == shipType.getName() ) {
+          ship.setMovesRemaining( shipType.getMaxSpeed() );
+          ship.setRotationsRemaining( shipType.getMaxRotate() );
+          ship.setCurrentSailsUp( shipType.getMaxSailsUp() );
+          ship.setSailsTotal( shipType.getSailsTotal() );
+        }
+      }
+    }
+
+    // System.out.println( scenario.getName() );
+    // System.out.println(ships.get(1).getNationality());
     // System.out.println( shipTypes.get(1).getName() );
+
+    // for (var ship : ships) {
+    //   System.out.println(ship.getType());
+    //   System.out.println(ship.getNationality());
+    //   System.out.println();
+    // }
+  
+    
+    model.addAttribute("j_scenario", scenario);
+    model.addAttribute("j_ship_types", shipTypes);
+    model.addAttribute("j_ships", ships);
 
     return "game";
   }
