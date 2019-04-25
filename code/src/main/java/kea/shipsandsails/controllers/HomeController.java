@@ -1,17 +1,17 @@
 package kea.shipsandsails.controllers;
 
+import kea.shipsandsails.services.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import kea.shipsandsails.services.ScenarioService;
-import kea.shipsandsails.services.ShipService;
-import kea.shipsandsails.services.ShipTypeService;
 import kea.shipsandsails.models.Scenario;
 import kea.shipsandsails.models.Ship;
 import kea.shipsandsails.models.ShipType;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.List;
 
 @Controller
@@ -38,12 +38,16 @@ public class HomeController {
   // If choosing server: Choose a scenario on this screen
   @GetMapping("/server")
   public String server() {
+    //ServerConnection sc = new ServerConnection();
+
     return "server";
   }
 
   // If choosing client: Type in ip and/or port on this screen
   @GetMapping("/client")
   public String client() {
+    //ClientConnection cc = new ClientConnection(6060, "127.0.0.1");
+
     return "client";
   }
 

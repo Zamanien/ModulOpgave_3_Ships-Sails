@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.io.IOException;
 
 public class ServiceConnection {
-
+/*
     public boolean closeConnection() {
         try {
             ss.close
@@ -15,5 +15,7 @@ public class ServiceConnection {
         }
 
     }
+
+ */
 
 }

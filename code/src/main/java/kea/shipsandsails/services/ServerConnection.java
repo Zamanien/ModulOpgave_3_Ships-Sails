@@ -2,49 +2,54 @@ package kea.shipsandsails.services;
 
 import org.apache.catalina.Server;
 
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.io.DataOutputStream;
-import java.io.DataInputStream;
 import java.net.Socket;
-import java.io.IOException;
 
 
 public class ServerConnection {
 
-    private static ServerSocket ss;
+    private ServerSocket ss;
+    private Socket socket;
     private final int PORT = 6060;
+
+    public static DataOutputStream dos;
+    public static DataInputStream dis;
 
     public ServerConnection() {
         try {
             ss = new ServerSocket(PORT);
+            socket = ss.accept();
+
+            dos = new DataOutputStream(socket.getOutputStream());
+            dis = new DataInputStream(socket.getInputStream());
+
+            //testing
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+            String inputText = "";
+            String response = "";
+
+            inputText = br.readLine();
+
+            dos.writeUTF(inputText);
+            dos.flush();
+
+            response = dis.readUTF();
+            System.out.println("Klienten siger: " + response);
+
+            dos.close();
+
+
+        } catch (IOException ioE) {
+            ioE.printStackTrace();
+
         }
-        catch (Exception Y){
-            System.out.println("Failure");
-        )
 
+     }
 
-    }
-
-        /*try {
-            ServerSocket ss = new ServerSocket(6060);
-            Socket socket = ss.accept();
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-
-            //Close
-            //socket.close();
-            //ss.close();
-            
-        }
-
-        catch (Exception x){
-            System.out.println("Exception X");
-        }
-
-         */
-
+}
         
 
-    }
-}
+

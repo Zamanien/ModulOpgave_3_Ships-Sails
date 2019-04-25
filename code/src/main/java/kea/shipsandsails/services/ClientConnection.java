@@ -4,18 +4,26 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
+//Indfør Thread til at vente på svar fra modstander
 
 public class ClientConnection {
 
         //Declaration of the Inetaddress = IP address
-        public static InetAddress hostIP;
-        public static final int PORT = 6060;
+        private InetAddress hostIP;
+        private int port;
+
+        private DataInputStream dis;
+        private DataOutputStream dos;
 
 
-    public ClientConnection(){
+    public ClientConnection(int port, String hostIP){ //Vi modtager IP som String -> Skal konverteres senere i programmet
 
-       try {
-            hostIP = InetAddress.getLocalHost();
+        this.port = port;
+
+        try {
+           //test - Bruger local IP
+            this.hostIP = InetAddress.getByName(hostIP);
+
 
        }
 
@@ -23,23 +31,38 @@ public class ClientConnection {
             System.out.println("Failure");
         }
 
+       try {
+            //deklarere og initialisere en socket med argumenterne hostip og port
+           Socket socket = new Socket(hostIP, port);
+           dos = new DataOutputStream(socket.getOutputStream());
+           dis = new DataInputStream(socket.getInputStream());
 
-       /* try {
-            Socket s = new Socket(6060);
-            DataInputStream inp = new DataInputStream(s.getInputStream());
-            DataOutputStream outp = new DataOutputStream(s.getOutputStream());
 
-            String str = inp.readUTF();
+           //Testing the connection
+           BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        }
+           String inputText = "";
+           String response = "";
 
-        catch (Exception Y){
+           inputText = br.readLine();
 
-            System.out.println("Exception Y");
-        }
-    }
+           dos.writeUTF(inputText);
+           dos.flush();
 
-        */
+           response = dis.readUTF();
+           System.out.println("Serveren siger: " + response);
+
+           dos.close();
+
+
+
+
+
+       }
+
+        catch (IOException e) {
+           e.printStackTrace();
+       }
 
     }
 }
