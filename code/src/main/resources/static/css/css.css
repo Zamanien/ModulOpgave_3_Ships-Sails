@@ -5,7 +5,6 @@
 
 body {
   /*background: #ccccff;*/
-  background: #335577;
   background: #284a6c;
   /* background: #e4290a; */
   /* background: #c61315;  /1* Nightmare mode *1/ */
@@ -18,6 +17,12 @@ h1 {
   font-size: 80px;
 }
 
+h2 {
+  font-size: 25px;
+}
+
+
+/* Game Menu */
 #menu {
   position: fixed;
   margin-top: 15px;
@@ -30,6 +35,10 @@ h1 {
 .buttons span {
   font-size: 35px;
   cursor: pointer;
+}
+
+button:hover {
+  background: white;
 }
 
 #turn-counter-clockwise, #change-ammunition-ball, #change-ammunition-chain {
@@ -55,11 +64,6 @@ h1 {
   margin-bottom: 175px;
 }
 
-h2 {
-  font-size: 25px;
-}
-
-
 /* Tile(s) */
 
 #tiles {
@@ -73,6 +77,10 @@ h2 {
 
 .selected-ship {
   background: url('../img/selected_tile.svg');
+}
+
+.target-tile {
+  background: url('../img/target_tile.svg');
 }
 
 .tile {
@@ -107,12 +115,24 @@ h2 {
   background-image: url("../img/ship-types/brig.svg");
 }
 
+.brig-player {
+  background-image: url("../img/ship-types/brig-player.svg");
+}
+
 .ship-of-the-line {
   background-image: url("../img/ship-types/ship-of-the-line.svg");
 }
 
+.ship-of-the-line-player {
+  background-image: url("../img/ship-types/ship-of-the-line-player.svg");
+}
+
 .man-at-war {
   background-image: url("../img/ship-types/man-at-war.svg");
+}
+
+.man-at-war-player {
+  background-image: url("../img/ship-types/man-at-war-player.svg");
 }
 
 /* Stat bars for sailors, hull */
@@ -128,9 +148,9 @@ h2 {
 /* Main, server and client menues */
 
 #mainmenu {
-  font-size: 50px;
+  font-size: 20px;
 }
 
-#mainmenu div:nth-of-type(2) {
-  margin-top: 100px;
+#mainmenu div:nth-of-type(1) {
+  margin-bottom: 100px;
 }

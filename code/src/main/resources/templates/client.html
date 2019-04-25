@@ -23,13 +23,19 @@
 
     <div id='mainmenu' class='container-fluid'>
 
-      <div class='row'>
-        <section class='col-md-6 offset-md-3'>
+      <div>
           <h1 class='text-center'>Ships & Sails</h1>
-        </section>
       </div>
 
-      TODO: Handle typing in server ip and port here? Via a form? then passed to java?
+      <div class='text-center'>
+          <form action="game" method="get" accept-charset="utf-8">
+            <input name="Server IP" placeholder="Server IP" id=""/>
+            <input name="Server Port" placeholder="Server Port" id=""/>
+            <input type="submit" value="Start game"/> 
+          </form>
+      </div>
+
+      <p class='text-center'>TODO: Pass this to java</p>
 
     </div>
   </body>

@@ -1,6 +1,6 @@
 
 // TODO: Programatically insert all ships from the array, rather than adding them manually in HTML and binding to them here
-// Ships need an ID as Java needs to be able to refer to it uniquely, and it cannot do so based off direction or position as several ships of the same type may occupy the same space (after a collision).
+// Ships need an ID as Java needs to be able to refer to it uniquely, and it cannot do so based off direction or position as several ships of the same type may occupy the same space (during a collision).
 class Ship {
   constructor(el, id, row, col, direction, type, nationality) {
     this.el = el
@@ -37,6 +37,9 @@ class Tile {
   }
 }
 
+// Reference to the tiles element
+tiles_elem = document.getElementById('tiles')
+
 // Just a few test ships
 // This is supposed to be what the ships look like when we receive them from Java. The element reference is missing at this point as it's generated in JS, say in place_ships.
 const ship1 = new Ship( null, 1, 1, 5, 30, "ship-of-the-line", "Aztec")
@@ -49,6 +52,8 @@ ships = [ship1, ship2, ship3, ship4]
 // TODO: Hardcoded which nationality the player is for now, just for testing
 player = "Aztec"
 enemy = "Celts"
+
+attack_mode = false
 
 
 
@@ -66,13 +71,10 @@ var sfx_volume = 0.6
 
 /* Tiles / World settings */
 
-const width = 10                   // It makes 1 less than twice the amount of this, if not zero indexed
-const height = 6                  // 1 lower than the total number of tiles from top to bottom, if not zero indexed
-const t_width = width * 2 - 2     // Total width, starting from 0
+const width = 10
+const height = 6
 
 /* Ship settings */
-
-ship_move_distance = 90
 
 // Direction settings. Interval: 60, resulting in 6 different directions. Hexagons! */
 o_offset = 30 // Depends on the sprite, determining its origin from which it should be rotated. Fx. if facing straight left it needs to be turned say 30 degrees up or down. Could opt for always rotating clockwise to the nearest valid direction.
@@ -98,16 +100,15 @@ const sotl_sounds_affirmative = ['Hshpyes1.wav', 'Hshpyes2.wav', 'Hshpyes3.wav']
 const maw_sounds_ready       = ['Alwhat1.wav', 'Alwhat2.wav', 'Alwhat3.wav']
 const maw_sounds_affirmative = ['Alyessr1.wav', 'Alyessr2.wav', 'Alyessr3.wav']
 
-const sounds_sink             = ['ship-sinking.wav']
+const sounds_sink             = ['ship-sinking.wav'] // Currently unused.
 const sounds_edge             = ['edge-scream.wav']
 
 
 
 /* INIT */
 
-// Default selected ship is no ship. Defined out here to have the proper scope.
-ship = null
-tiles = [] // No tiles to begin with, populated by place_tiles
+ship = null  // Default selected ship is no ship. Defined out here to have the proper scope.
+tiles = []   // No tiles to begin with, populated by place_tiles
 
 place_tiles()
 place_ships()
@@ -117,24 +118,23 @@ place_ships()
 /* METHODS */
 
 function place_tiles() {
-  let tilesHTML = document.getElementById('tiles') // Get a reference to what will be the element surrounding all the tiles
   const tile_offset_height = 121 // Pretty much = the height of the tile
   const tile_offset_width = 210  // Pretty much = the width of the tile
 
-  // Add the odd columns of tiles
   for (var w = 0; w < width; w++) {
 
     for (var h = 0; h < height; h++) {
       
       let div = document.createElement('div')
-      div.classList.add('tile', 'basic-tile')  // Add basic-tile class to the element
-      tilesHTML.appendChild(div)       // Add HTML element to the page
-      tiles.push( new Tile(div, h, w) ) // Add tile to the tile array: 0,0 - 0,2 - 0,4
+      div.classList.add('tile', 'basic-tile')  // Add tile and basic-tile CSS classes to the element
+      tiles_elem.appendChild(div)               // Add HTML element to the page
+      tiles.push( new Tile(div, h, w) )        // Add tile to the tile array: 0,0 - 0,2 - 0,4
 
       var val = h * tile_offset_height
       div.style.top  += val + "px"
       div.style.left += (w * tile_offset_width/2)  + "px"
-      if ( w % 2 == 0) {
+      // Different offsets for every second tile
+      if ( w % 2 == 0) { 
         new_h = Math.floor(tile_offset_height / 2) // Negative to move the tile upwards by half the tile height
         div.style.top  = val + new_h + "px"
       // place_tile_coordinates((h * tile_offset_height), (w * tile_offset_width), h, w*2)
@@ -146,11 +146,10 @@ function place_tiles() {
 
 // Maybe just for debugging, doesn't quite position the numbers correctly, but it's almost good enough for debug
 function place_tile_coordinates(tile_h, tile_w, row, col) {
-  let tilesHTML = document.getElementById('tiles') // Get a reference to what will be the element surrounding all the tiles
   let div = document.createElement('div')
   div.innerHTML =  row + ", " + col
   div.classList.add('tile-coordinate')
-  tilesHTML.appendChild(div)
+  tiles_elem.appendChild(div)
 
   let cb = document.getElementById("tiles").getBoundingClientRect();
   div.style.top  = (tile_h - cb.top) + "px"
@@ -160,10 +159,12 @@ function place_tile_coordinates(tile_h, tile_w, row, col) {
 // For setting up the match
 function place_ships() {
   let shipsHTML = document.getElementById('ships')
-  for (aShip of j_ships) {
+  for (aShip of ships) {
     let div = document.createElement('div')
     div.classList.add('ship')       // Adding the styling all ships have in common
-    div.classList.add( aShip.type.toLowerCase().replace(/ /g, '-') )   // I need to add a class so CSS knows which ship model it for selecting an image to show. Replace replaces all whitespaces with - to turn them into valid CSS class names, and lowercasing to match our own CSS class naming convention.
+    shipTypeClass = aShip.type.toLowerCase().replace(/ /g, '-')
+    if (aShip.nationality == player) shipTypeClass += "-player"
+    div.classList.add( shipTypeClass )   // I need to add a class so CSS knows which ship model it for selecting an image to show. Replace replaces all whitespaces with - to turn them into valid CSS class names, and lowercasing to match our own CSS class naming convention.
     shipsHTML.appendChild(div)
     aShip.el = div // A reference to this particular ship is saved. TODO: Is this even possible?
 
@@ -273,6 +274,7 @@ function update_selected_tile() {
 /* Ship controls */
 
 function move() {
+    // It's fx. not always +1 on both axes going south east, as x will be 0 going from an even to an odd column as it's currently tiled. Hence we treat odd and even cols differently.
     even = (ship.col % 2)? true : false
 
   // 30, 90, 150, 210, 270, 330
@@ -286,7 +288,7 @@ function move() {
     if (ship.direction == 30) {
       if (even) ship.row--
       ship.col--
-    }  // TODO: These algorithms are wrong! It's fx. not always +1 on both axes going south east, as x will be 0 going from an even to an odd row as it's currently tiled
+    }
     else if (ship.direction == 90) ship.row--
     
     else if (ship.direction == 150) {
@@ -304,7 +306,7 @@ function move() {
       ship.col--
     }
 
-    if (ship.row < 0 || ship.col < 0 || ship.row > height || ship.col > t_width) move_over_edge()
+    if (ship.row < 0 || ship.col < 0 || ship.row > height-1 || ship.col > width-1) move_over_edge()
     update_selected_tile()
     play_sfx_affirmative()
 
@@ -322,10 +324,13 @@ function move() {
 
 // Old move method, useful for moving outside of tiles, such as over the edge.
 function move_over_edge() {
+  ship_move_distance = 90
+
   // We need to move it first for visuals' sake, but this is helpful for faster debugging
-  ship.el.parentElement.removeChild(ship.el) 
-  ship = null
+  destroy_ship(ship)
   update_selected_tile()
+  ship = null
+
 
   // // Get current position
   // curPosLeft = parseInt(ship.el.style.left)
@@ -381,7 +386,7 @@ async function turn_visual(direction) {
   }
 
   //BUG!: When await is called you can select a ship, press to rotate, then select another ship before sleep is over, and the newly selected ship moves instead.
-  if (ship.type != 'man-at-war') await sleep(1700); // Whatever the transition duration is (ie. the time it takes to rotate).
+  if (ship.type != 'man-at-war') await sleep(1700); // Set to whatever the transition duration is (ie. the time it takes to rotate).
 
   move()
 }
@@ -403,13 +408,62 @@ const CHAIN  = 1
 const GRAPE  = 2
 
 // TODO: Implement attacking here. We also need support for the player clicking where to attack on the map/tiles, after clicking the attack button.
-function attack() {
-  if (ship.load == 0) {
+function attack_mode_toggle() {
+
+  if (attack_mode == true) clear_attack_mode() // Clears event listeners
+
+  else {
+
+    if (ship.load == 0) {
+      attack_mode = true
+
+      // Using named event listeners to be able to clear them again
+      tiles_elem.addEventListener('mouseover', mover)
+      tiles_elem.addEventListener('mouseout', mout)
+      tiles_elem.addEventListener('mousedown', mdown)
+
+    }
+    else alert("Your current weapon isn't loaded. You have to wait at least " + ship.load + " turns.")
+  }
+}
+
+function mover() { highlight_attack_tile(event.target, true) }
+function mout() {  highlight_attack_tile(event.target, false) }
+function mdown() { attack(event.target) }
+
+
+function clear_attack_mode() {
+  attack_mode = !attack_mode
+  tiles_elem.removeEventListener('mouseover', mover)
+  tiles_elem.removeEventListener('mouseout', mout)
+  tiles_elem.removeEventListener('mousedown', mdown)
+}
+
+function attack(tile_attacked) {
+
+    // TODO: Just enter Attack mode and wait for a left click on a tile to fire, or right click anywhere to cancel
     alert('Attacking...')
     ship.load = 2 // It will be decremented by 1 at the start of the next round, making it reach 0 after two "end turns"
     display_current_ammunition() // Update this as ship.load is now above 0, no longer ready to fire
-  }
-  else alert("Your current weapon isn't loaded. You have to wait at least " + ship.load + " turns.")
+    clear_attack_mode()
+    highlight_attack_tile(event.target, false)
+
+    // Find the coordinates of the targetted tile
+    targeted_tile = null
+    for (tile of tiles) {
+      if (tile.el == tile_attacked) targeted_tile = tile 
+    }
+
+    for (ship of ships) {
+      if (targeted_tile.row == ship.row && targeted_tile.col == ship.col) destroy_ship(aShip)
+    }
+    
+}
+
+function destroy_ship(aShip) {
+  alert("Destroyed!")
+
+  aShip.el.parentElement.removeChild(aShip.el) 
 }
 
 // TODO: Add turn-based delays to this
@@ -454,14 +508,18 @@ function display_current_ammunition() {
   current.classList.add(cl)
 }
 
+function highlight_attack_tile(e, over) {
+  if (over) e.classList.add('target-tile')
+  else e.classList.remove('target-tile')
+}
+
 
 ball.onclick  = () => { update_ammunition(CANNON) }
 
 chain.onclick = () => { update_ammunition(CHAIN) }
 grape.onclick = () => { update_ammunition(GRAPE) }
 
-document.getElementById('attack').onclick = attack
-
+document.getElementById('attack').onclick = attack_mode_toggle
 
 
 /* EVENT BINDINGS */

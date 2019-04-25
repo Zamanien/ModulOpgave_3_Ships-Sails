@@ -160,11 +160,11 @@ public class Ship {
         this.speed = speed;
     }
 
-    public int getHull_health() {
+    public int getHullHealth() {
         return hull_health;
     }
 
-    public void setHull_health(int hull_health) {
+    public void setHullHealth(int hull_health) {
         this.hull_health = hull_health;
     }
 

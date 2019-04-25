@@ -1,7 +1,7 @@
 package kea.shipsandsails.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model; // For the model!
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -65,6 +65,8 @@ public class HomeController {
           ship.setRotationsRemaining( shipType.getMaxRotate() );
           ship.setCurrentSailsUp( shipType.getMaxSailsUp() );
           ship.setSailsTotal( shipType.getSailsTotal() );
+          ship.setSailors( shipType.getSailors() );
+          System.out.println(shipType.getSailors());
         }
       }
     }
