@@ -1,4 +1,4 @@
-package kea.shipsandsails.service.gunController;
+package kea.shipsandsails.services;
 
 import java.util.Scanner;
 

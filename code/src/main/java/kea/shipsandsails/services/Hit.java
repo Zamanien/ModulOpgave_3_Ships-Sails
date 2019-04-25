@@ -1,4 +1,4 @@
-package kea.shipsandsails.service.gunController;
+package kea.shipsandsails.services;
 
 
 
@@ -33,18 +33,24 @@ public class Hit
 
    public double targetIsHit() {
 
+
+
+        //Lav array, der henter kordinater, og derved opdaterer damagen hele tiden og kulminerer damagen
+
+
+
        //Create methods that checks if the target is hit.
        //Wait for communication responsible class to verify
        //It´s currently not working
         for (int rollOnce = 0; rollOnce < 7; rollOnce++) {
-            if(tile == 10%) {
+            //if(tile == 10%) {
                 if (rollHit == 1) {
                     System.out.println("Gratz you scored a hit!");
                     System.out.println("Your roll was:" + rollOnce);
                     firingValueNumbers = 0.1;
                 }
             }
-            if (tile == 40%) {
+            //if (tile == 40%) {
                 if (rollHit <= 4) {
                     System.out.println("Congratulations! You score a hit!");
                     System.out.println("Your roll was:" + rollHit);
@@ -58,15 +64,13 @@ public class Hit
                         }
                     }
                 }
-            }
+
             else {
                 System.out.println("You missed :(");
                 System.out.println("Your roll was:" + rollHit);
             }
        return firingValueNumbers;
        }
-        return firingValueNumbers;
-}
 }
 
 

@@ -1,9 +1,10 @@
-package kea.shipsandsails.service.gunController;
+package kea.shipsandsails.services;
 
 import kea.shipsandsails.models.Order;
 import kea.shipsandsails.models.Ship;
+import kea.shipsandsails.models.ShipType;
 import kea.shipsandsails.services.IAttack;
-
+import kea.shipsandsails.services.GunType;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,13 +34,24 @@ public class GunController implements IAttack
        direction.shootDirection();
     }*/
 
-    public static double[] checkCurrentDamage(Ship ship)
+    public static double[] checkCurrentDamage(Ship ship, ShipType[] shiptypes)
     {
         GunType myAmmunition = new GunType();
         myAmmunition.pauseForWeaponChoice();
         Scanner scan = new Scanner(System.in);
         String pause = scan.nextLine();
-        GunCount fireIsPossible = new GunCount();
+        //GunCount fireIsPossible = new GunCount();
+        int i;
+        for (i = 0; i<shiptypes.length; i++)
+        {
+            if(shiptypes[i].getName() == ship.getType())
+            {
+                break;
+            }
+        }
+        shiptypes[i].getGunsPerSide();
+        int amountOfGuns = shiptypes[i].getGunsPerSide();
+        int amountOfSailors = ship.getSailors();
         Target direction = new Target();
         direction.shootDirection();
         Order waitForTurn = new Order();
@@ -58,21 +70,30 @@ public class GunController implements IAttack
         else
         {
             Hit weHitTheTarget = new Hit();
-            int guns = fireIsPossible.amountOfGuns();
+            int guns;
+            amountOfGuns = amountOfGuns / 2;
+            amountOfSailors = amountOfSailors / 3;
+            if(amountOfSailors> 3 && amountOfSailors <=amountOfGuns)
+            {
+                guns = amountOfSailors;
+            }
+            else
+            {
+                guns = amountOfGuns;
+            }
             double firingValue = weHitTheTarget.getFiringValueNumbers() * guns;
-            double damageDone = firingValue;
             if(myAmmunition.checkWeaponType() == 1)
             {
-                remainingHealth[0] = ship.getHull_health() - damageDone;
+                remainingHealth[0] = ship.getHull_health() - firingValue;
             }
             if (myAmmunition.checkWeaponType() == 2)
             {
-                remainingHealth[1] = ship.getSail_health() - damageDone;
+                remainingHealth[1] = ship.getSailHealth()- firingValue;
 
             }
             if(myAmmunition.checkWeaponType() == 3)
             {
-                remainingHealth[2] = ship.getSailors() - damageDone;
+                remainingHealth[2] = ship.getSailors() - firingValue;
 
             }
 
