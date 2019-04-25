@@ -27,4 +27,6 @@ public class CommunicationService implements ICommunication {
     public void exchangeAttackResolved(List<Ship> ships) {
     
     }
+
+
 }
