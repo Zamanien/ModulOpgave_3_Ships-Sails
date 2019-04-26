@@ -112,24 +112,24 @@ button:hover {
 }
 
 /* Styling differing between ship models */
-.brig {
-  background-image: url("../img/ship-types/brig.svg");
+.brig-enemy {
+  background-image: url("../img/ship-types/brig-enemy.svg");
 }
 
 .brig-player {
   background-image: url("../img/ship-types/brig-player.svg");
 }
 
-.ship-of-the-line {
-  background-image: url("../img/ship-types/ship-of-the-line.svg");
+.ship-of-the-line-enemy {
+  background-image: url("../img/ship-types/ship-of-the-line-enemy.svg");
 }
 
 .ship-of-the-line-player {
   background-image: url("../img/ship-types/ship-of-the-line-player.svg");
 }
 
-.man-at-war {
-  background-image: url("../img/ship-types/man-at-war.svg");
+.man-at-war-enemy {
+  background-image: url("../img/ship-types/man-at-war-enemy.svg");
 }
 
 .man-at-war-player {

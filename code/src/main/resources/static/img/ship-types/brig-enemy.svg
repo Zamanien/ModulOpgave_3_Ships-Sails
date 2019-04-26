@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 5da689c313, 2019-01-14"
-   sodipodi:docname="brig.svg">
+   sodipodi:docname="brig-enemy.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
+     inkscape:zoom="1.4"
      inkscape:cx="574.14344"
-     inkscape:cy="775.75442"
+     inkscape:cy="375.75442"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -69,9 +69,10 @@
        id="path815-5"
        inkscape:connector-curvature="0" />
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#1e1e1e;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 85.299232,256.15321 v -68.30642 a 9.2604168,34.206849 0 0 0 -8.92038,34.16225 9.2604168,34.206849 0 0 0 8.92038,34.14417 z"
+       style="opacity:1;fill:#e5ff80;fill-opacity:1;fill-rule:evenodd;stroke:#1e1e1e;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 85.299232,256.15321 c 0,0 -1.889881,-22.75139 -1.889881,-34.15321 0,-11.40182 1.889881,-34.15321 1.889881,-34.15321 v 0 c -4.976447,0.67544 -8.917246,15.76746 -8.92038,34.16225 0.0058,18.38778 3.945826,33.46899 8.92038,34.14417 z"
        id="path822"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cacccc" />
   </g>
 </svg>

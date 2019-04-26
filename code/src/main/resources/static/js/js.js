@@ -47,6 +47,7 @@ const ship2 = new Ship( null, 2, 1, 3, 30, "brig", "Aztec" )
 const ship3 = new Ship( null, 3, 3, 4, 330, "man-at-war", "Aztec" )
 const ship4 = new Ship( null, 5, 1, 7, 330, "man-at-war", "Celts" ) // The enemy!
 
+// Comment this line to load ships from Java instead (which only partially works)
 ships = [ship1, ship2, ship3, ship4]
 
 // TODO: Hardcoded which nationality the player is for now, just for testing
@@ -164,6 +165,7 @@ function place_ships() {
     div.classList.add('ship')       // Adding the styling all ships have in common
     shipTypeClass = aShip.type.toLowerCase().replace(/ /g, '-')
     if (aShip.nationality == player) shipTypeClass += "-player"
+    else if (aShip.nationality == enemy) shipTypeClass += "-enemy"
     div.classList.add( shipTypeClass )   // I need to add a class so CSS knows which ship model it for selecting an image to show. Replace replaces all whitespaces with - to turn them into valid CSS class names, and lowercasing to match our own CSS class naming convention.
     shipsHTML.appendChild(div)
     aShip.el = div // A reference to this particular ship is saved. TODO: Is this even possible?
@@ -225,7 +227,7 @@ function music_toggle() {
 // TODO: Prevent ending the turn if there's moves you have to make left, due to speed
 function end_turn() {
   alert('Ending turn...')
-  if (ship.load != 0) ship.load--
+  for (aShip of ships) if (aShip.load != 0) aShip.load--
   display_current_ammunition() // The ammunition might be loaded now, so the UI should show it
 }
 
@@ -327,7 +329,7 @@ function move_over_edge() {
   ship_move_distance = 90
 
   // We need to move it first for visuals' sake, but this is helpful for faster debugging
-  destroy_ship(ship)
+  destroy_ship(ship, false)
   update_selected_tile()
   ship = null
 
@@ -385,7 +387,8 @@ async function turn_visual(direction) {
     ship.el.style.transform = 'rotate(' + (cur_direction - o_degrees) + 'deg)'
   }
 
-  //BUG!: When await is called you can select a ship, press to rotate, then select another ship before sleep is over, and the newly selected ship moves instead.
+  //TODO: BUG!: When await is called you can select a ship, press to rotate, then select another ship before sleep is over, and the newly selected ship moves instead.
+  // Ideally we'd suspend all event handlers here until it's over. We can't lock up the UI with busy wait because then it stops the CSS rotation as well.
   if (ship.type != 'man-at-war') await sleep(1700); // Set to whatever the transition duration is (ie. the time it takes to rotate).
 
   move()
@@ -433,7 +436,7 @@ function mdown() { attack(event.target) }
 
 
 function clear_attack_mode() {
-  attack_mode = !attack_mode
+  attack_mode = false
   tiles_elem.removeEventListener('mouseover', mover)
   tiles_elem.removeEventListener('mouseout', mout)
   tiles_elem.removeEventListener('mousedown', mdown)
@@ -441,29 +444,46 @@ function clear_attack_mode() {
 
 function attack(tile_attacked) {
 
-    // TODO: Just enter Attack mode and wait for a left click on a tile to fire, or right click anywhere to cancel
-    alert('Attacking...')
-    ship.load = 2 // It will be decremented by 1 at the start of the next round, making it reach 0 after two "end turns"
-    display_current_ammunition() // Update this as ship.load is now above 0, no longer ready to fire
-    clear_attack_mode()
-    highlight_attack_tile(event.target, false)
+  // TODO: Just enter Attack mode and wait for a left click on a tile to fire, or right click anywhere to cancel
+  // alert('Attacking...')
+  ship.load = 2 // It will be decremented by 1 at the start of the next round, making it reach 0 after two "end turns"
+  display_current_ammunition() // Update this as ship.load is now above 0, no longer ready to fire
+  clear_attack_mode()
+  highlight_attack_tile(event.target, false)
 
-    // Find the coordinates of the targetted tile
-    targeted_tile = null
-    for (tile of tiles) {
-      if (tile.el == tile_attacked) targeted_tile = tile 
-    }
+  // Find the coordinates of the targetted tile
+  targeted_tile = null
+  for (aTile of tiles) {
+    if (aTile.el == tile_attacked) targeted_tile = aTile 
+  }
 
-    for (ship of ships) {
-      if (targeted_tile.row == ship.row && targeted_tile.col == ship.col) destroy_ship(aShip)
-    }
-    
+  for (aShip of ships) {
+    if (targeted_tile.row == aShip.row && targeted_tile.col == aShip.col) damage_ship(ship, aShip)
+  }
+  
 }
 
-function destroy_ship(aShip) {
-  alert("Destroyed!")
+// This was just quickly implemented as a demonstration. Obviously > 10 is not a sufficient criterion as it will then become impervious to damage if it reaches fx. 9.
+function damage_ship(current_ship, target_ship) {
+  // Damage modifier based on the shiptype attacking
+  if (current_ship.type == 'brig') damage_modifier = 10
+  else if (current_ship.type == 'ship-of-the-line') damage_modifier = 20
+  else if (current_ship.type == 'man-at-war') damage_modifier = 30
+
+  if (target_ship.hull_health > 10) { // If 0 destroy the ship
+
+    target_ship.hull_health -= Math.random() * damage_modifier
+    if (target_ship.sailors > 10) target_ship.sailors -= Math.random() * damage_modifier // Don't go to negative values
+    if (target_ship.sail_health > 10) target_ship.sail_health -= Math.random() * damage_modifier
+  }
+  else destroy_ship(target_ship, true)
+}
+
+function destroy_ship(aShip, sink) {
 
   aShip.el.parentElement.removeChild(aShip.el) 
+
+  if (sink) play_sfx(base_path, sounds_sink)
 }
 
 // TODO: Add turn-based delays to this
