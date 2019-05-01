@@ -39,6 +39,7 @@ class Tile {
 
 // Reference to the tiles element
 tiles_elem = document.getElementById('tiles')
+ships_elem = document.getElementById('ships')
 
 // Just a few test ships
 // This is supposed to be what the ships look like when we receive them from Java. The element reference is missing at this point as it's generated in JS, say in place_ships.
@@ -68,7 +69,7 @@ attack_mode = false
 const audio = new Audio('audio/music/7.opus')
 // audio.play() // Auto-play music
 var sfx_muted = false
-var sfx_volume = 0.6
+var sfx_volume = 0.7
 
 /* Tiles / World settings */
 
@@ -159,7 +160,6 @@ function place_tile_coordinates(tile_h, tile_w, row, col) {
 
 // For setting up the match
 function place_ships() {
-  let shipsHTML = document.getElementById('ships')
   for (aShip of ships) {
     let div = document.createElement('div')
     div.classList.add('ship')       // Adding the styling all ships have in common
@@ -167,7 +167,7 @@ function place_ships() {
     if (aShip.nationality == player) shipTypeClass += "-player"
     else if (aShip.nationality == enemy) shipTypeClass += "-enemy"
     div.classList.add( shipTypeClass )   // I need to add a class so CSS knows which ship model it for selecting an image to show. Replace replaces all whitespaces with - to turn them into valid CSS class names, and lowercasing to match our own CSS class naming convention.
-    shipsHTML.appendChild(div)
+    ships_elem.appendChild(div)
     aShip.el = div // A reference to this particular ship is saved. TODO: Is this even possible?
 
     // Rotate the ship properly 
@@ -233,7 +233,7 @@ function end_turn() {
 
 
 // Adding an event listener on the Ships div, used for ship selection below 
-document.getElementById('ships').addEventListener('click', function(event) {
+ships_elem.addEventListener('click', function(event) {
   ship_selection(event.target);
 })
 
@@ -413,12 +413,15 @@ const GRAPE  = 2
 // TODO: Implement attacking here. We also need support for the player clicking where to attack on the map/tiles, after clicking the attack button.
 function attack_mode_toggle() {
 
+  // If pressing the attack button a second time: Cancel attack mode
   if (attack_mode == true) clear_attack_mode() // Clears event listeners
 
   else {
 
     if (ship.load == 0) {
       attack_mode = true
+
+      ships_elem.classList.add('disable-pointer-events')
 
       // Using named event listeners to be able to clear them again
       tiles_elem.addEventListener('mouseover', mover)
@@ -436,10 +439,14 @@ function mdown() { attack(event.target) }
 
 
 function clear_attack_mode() {
+
   attack_mode = false
+  ships_elem.classList.remove('disable-pointer-events')
+
   tiles_elem.removeEventListener('mouseover', mover)
   tiles_elem.removeEventListener('mouseout', mout)
   tiles_elem.removeEventListener('mousedown', mdown)
+
 }
 
 function attack(tile_attacked) {
