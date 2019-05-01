@@ -38,7 +38,7 @@ public class HomeController {
   // If choosing server: Choose a scenario on this screen
   @GetMapping("/server")
   public String server() {
-    //ServerConnection sc = new ServerConnection();
+    // ServerConnection sc = new ServerConnection();
 
     return "server";
   }
@@ -60,20 +60,19 @@ public class HomeController {
     ships = shs.fetchScenarioShips("X Marks the Spot");
     shipTypes = shtys.fetchShipTypes();
 
-    // TESTING
     // Setting starting values specific to each ship type on the ships
     for (var ship : ships) {
       for (var shipType : shipTypes) {
-        if ( ship.getType() == shipType.getName() ) {
+        if ( ship.getType().equals( shipType.getName() ) ) {
           ship.setMovesRemaining( shipType.getMaxSpeed() );
           ship.setRotationsRemaining( shipType.getMaxRotate() );
           ship.setCurrentSailsUp( shipType.getMaxSailsUp() );
           ship.setSailsTotal( shipType.getSailsTotal() );
-          ship.setSailors( shipType.getSailors() );
-          System.out.println(shipType.getSailors());
+          ship.setSailors( shipType.getSailors() ); // TODO: Really this needs to be converted to a percentage either here or in JS, for the UI progress bar
         }
       }
     }
+    // TESTING
 
     // System.out.println( scenario.getName() );
     // System.out.println(ships.get(1).getNationality());

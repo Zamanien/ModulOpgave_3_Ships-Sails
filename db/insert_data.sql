@@ -31,18 +31,18 @@ INSERT INTO ship_types (name , sailors , sailors_needed_on_guns , sailors_needed
 VALUES ('Man at War'         , 340     , 84                     , 144                     , 42            , 140            , 24           , 80          , 4         , 1                , 1);
 
 
+-- Directions: 30 to 330 degrees, 0 degrees being straight left which is an invalid direction. 30 is north west, 90 north and so forth.
+INSERT INTO ships (scenario , type               , nationality , row , col , direction)
+VALUES('X Marks the Spot'   , 'Ship of the Line' , 'Aztec'     , 3   , 4   , 30);
 
 INSERT INTO ships (scenario , type               , nationality , row , col , direction)
-VALUES('X Marks the Spot'   , 'Ship of the Line' , 'Aztec'     , 3   , 4   , 3);
+VALUES('X Marks the Spot'   , 'Brig'             , 'Aztec'     , 3   , 5   , 150);
 
 INSERT INTO ships (scenario , type               , nationality , row , col , direction)
-VALUES('X Marks the Spot'   , 'Brig'             , 'Aztec'     , 3   , 5   , 2);
+VALUES('X Marks the Spot'   , 'Man at War'       , 'Aztec'     , 2   , 2   , 330);
 
 INSERT INTO ships (scenario , type               , nationality , row , col , direction)
-VALUES('X Marks the Spot'   , 'Man At War'       , 'Aztec'     , 2   , 2   , 3);
+VALUES('X Marks the Spot'   , 'Man at War'       , 'Celts'     , 1   , 5   , 90);
 
 INSERT INTO ships (scenario , type               , nationality , row , col , direction)
-VALUES('X Marks the Spot'   , 'Man At War'       , 'Celts'     , 1   , 5   , 1);
-
-INSERT INTO ships (scenario , type               , nationality , row , col , direction)
-VALUES('X Marks the Spot'   , 'Ship of the Line' , 'Celts'     , 0   , 1   , 4);
+VALUES('X Marks the Spot'   , 'Ship of the Line' , 'Celts'     , 0   , 1   , 270);

@@ -42,6 +42,8 @@
 			<scope>runtime</scope>
 		</dependency>
 
+    <!-- Database -->
+
     <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>

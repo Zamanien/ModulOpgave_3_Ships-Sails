@@ -16,8 +16,8 @@ class Ship {
     
     // Hardcoded rather than passed in by the constructor?
     this.sailors     = 100  // In Java this should simply be derived off ship type. Unlike Java it's a percentage here, since it's represented by a progress bar. That could be changed if need be, and then the value must simply be converted to percent for that progress bar.
-    this.hull_health = 100
-    this.sail_health = 100
+    this.hullHealth = 100
+    this.sailHealth = 100
     this.currentAmmunitionType = 0
     this.load = 0
     this.speed = 0 // The current speed of the ship
@@ -43,13 +43,13 @@ ships_elem = document.getElementById('ships')
 
 // Just a few test ships
 // This is supposed to be what the ships look like when we receive them from Java. The element reference is missing at this point as it's generated in JS, say in place_ships.
-const ship1 = new Ship( null, 1, 1, 5, 30, "ship-of-the-line", "Aztec")
-const ship2 = new Ship( null, 2, 1, 3, 30, "brig", "Aztec" )
-const ship3 = new Ship( null, 3, 3, 4, 330, "man-at-war", "Aztec" )
-const ship4 = new Ship( null, 5, 1, 7, 330, "man-at-war", "Celts" ) // The enemy!
+const ship1 = new Ship( null, 1, 1, 5, 90, "Ship of the Line", "Aztec")
+const ship2 = new Ship( null, 2, 1, 3, 30, "Brig", "Aztec" )
+const ship3 = new Ship( null, 3, 3, 4, 330, "Man at War", "Aztec" )
+const ship4 = new Ship( null, 5, 1, 7, 330, "Man at War", "Celts" ) // The enemy!
 
 // Comment this line to load ships from Java instead (which only partially works)
-ships = [ship1, ship2, ship3, ship4]
+// ships = [ship1, ship2, ship3, ship4]
 
 // TODO: Hardcoded which nationality the player is for now, just for testing
 player = "Aztec"
@@ -85,7 +85,8 @@ o_degrees = 60
 
 // The relative offset based off the direction. If changing to tip topped hexagons, just change the offset!
 // TODO: Actually not used for anything at the moment?
-directions = [o_offset, o_offset + (o_degrees*1), o_offset + (o_degrees*2), o_offset + (o_degrees*3), o_offset + (o_degrees*4), o_offset + (o_degrees*5)]
+// 0 = 30, 1 = 90, 2 = 150, 3 = 210, 4 = 270, 5 = 330
+// directions = [o_offset, o_offset + (o_degrees*1), o_offset + (o_degrees*2), o_offset + (o_degrees*3), o_offset + (o_degrees*4), o_offset + (o_degrees*5)]
 
 
 /* SFX settings */
@@ -168,10 +169,10 @@ function place_ships() {
     else if (aShip.nationality == enemy) shipTypeClass += "-enemy"
     div.classList.add( shipTypeClass )   // I need to add a class so CSS knows which ship model it for selecting an image to show. Replace replaces all whitespaces with - to turn them into valid CSS class names, and lowercasing to match our own CSS class naming convention.
     ships_elem.appendChild(div)
-    aShip.el = div // A reference to this particular ship is saved. TODO: Is this even possible?
+    aShip.el = div // A reference to this particular ship is saved.
 
     // Rotate the ship properly 
-    aShip.el.style.transform = "rotate(+" + aShip.direction + "deg)"; // TODO: The default rotation may vary per ship? Randomize it based off the direction array? Basically this should be default_rotation + aShip.direction
+    aShip.el.style.transform = "rotate(+" + aShip.direction + "deg)";
 
     // Put the ship in its proper position on the map
     for (aTile of tiles) {
@@ -190,15 +191,15 @@ function place_ships() {
 
 
 function play_sfx_ready() {
-  if (ship.type == 'brig') play_sfx(base_path_brig, brig_sounds_ready)
-  else if (ship.type == 'ship-of-the-line') play_sfx(base_path_sotl, sotl_sounds_ready)
-  else if (ship.type == 'man-at-war') play_sfx(base_path_maw, maw_sounds_ready)
+  if (ship.type == 'Brig') play_sfx(base_path_brig, brig_sounds_ready)
+  else if (ship.type == 'Ship of the Line') play_sfx(base_path_sotl, sotl_sounds_ready)
+  else if (ship.type == 'Man at War') play_sfx(base_path_maw, maw_sounds_ready)
 }
 
 function play_sfx_affirmative() {
-  if (ship.type == 'brig') play_sfx(base_path_brig, brig_sounds_affirmative)
-  else if (ship.type == 'ship-of-the-line') play_sfx(base_path_sotl, sotl_sounds_affirmative)
-  else if (ship.type == 'man-at-war') play_sfx(base_path_maw, maw_sounds_affirmative)
+  if (ship.type == 'Brig') play_sfx(base_path_brig, brig_sounds_affirmative)
+  else if (ship.type == 'Ship of the Line') play_sfx(base_path_sotl, sotl_sounds_affirmative)
+  else if (ship.type == 'Man at War') play_sfx(base_path_maw, maw_sounds_affirmative)
 }
 
 function play_sfx(bp, sounds) {
@@ -248,8 +249,8 @@ function ship_selection(clicked_ship) {
 
       /* Update health bars */
       document.getElementById('sailors').style.width = ship.sailors + "%"
-      document.getElementById('hull-health').style.width = ship.hull_health + "%"
-      document.getElementById('sails-health').style.width = ship.sail_health + "%"
+      document.getElementById('hull-health').style.width = ship.hullHealth + "%"
+      document.getElementById('sails-health').style.width = ship.sailHealth + "%"
 
       display_current_ammunition() // Update the UI to show the currently loaded ammunition for the current ship
 
@@ -276,6 +277,8 @@ function update_selected_tile() {
 /* Ship controls */
 
 function move() {
+    ships_elem.classList.add('disable-pointer-events') // Disable ship selection while the move is ongoing to prevent a bug where one selects a ship, tells it to move/rotate and then select another ship and then that ship moves instead
+
     // It's fx. not always +1 on both axes going south east, as x will be 0 going from an even to an odd column as it's currently tiled. Hence we treat odd and even cols differently.
     even = (ship.col % 2)? true : false
 
@@ -287,25 +290,29 @@ function move() {
   // For left and right there are 4 directions to check
   // Moving within the board
     // Updating coordinates
-    if (ship.direction == 30) {
-      if (even) ship.row--
-      ship.col--
-    }
-    else if (ship.direction == 90) ship.row--
-    
-    else if (ship.direction == 150) {
-      if (even) ship.row--
-      ship.col++
-    }
-    
-    else if (ship.direction == 210) {
-      if (!even) ship.row++
-      ship.col++
-    }
-    else if (ship.direction == 270) ship.row++
-    else { // 330
-      if (!even) ship.row++
-      ship.col--
+    switch (ship.direction) {
+      case 30:
+        if (even) ship.row--
+        ship.col--
+        break
+      case 90:
+        ship.row--
+        break
+      case 150:
+        if (even) ship.row--
+        ship.col++
+        break
+      case 210:
+        if (!even) ship.row++
+        ship.col++
+        break
+      case 270:
+        ship.row++
+        break
+      case 330:
+        if (!even) ship.row++
+        ship.col--
+        break
     }
 
     if (ship.row < 0 || ship.col < 0 || ship.row > height-1 || ship.col > width-1) move_over_edge()
@@ -322,6 +329,7 @@ function move() {
         break
       }
     }
+    ships_elem.classList.remove('disable-pointer-events') // Re-enable ship selection after the move has finished
 }
 
 // Old move method, useful for moving outside of tiles, such as over the edge.
@@ -330,8 +338,8 @@ function move_over_edge() {
 
   // We need to move it first for visuals' sake, but this is helpful for faster debugging
   destroy_ship(ship, false)
-  update_selected_tile()
-  ship = null
+  update_selected_tile() // Remove the visual indicator (green outline) for what was previously the currently selected ship
+  ship = null // Set currently selected ship to null
 
 
   // // Get current position
@@ -356,6 +364,10 @@ function move_over_edge() {
 // TURNING
 
 function turn_clockwise() {
+  // Honestly all these disable-pointer-events on turn and move (not attack!) are just error handling only needed because of the await way of turning. If we just switch fully to man-at-war's way of turning it wouldn't be needed.
+  ships_elem.classList.add('disable-pointer-events') // Disable ship selection while the move is ongoing to prevent a bug where one selects a ship, tells it to move/rotate and then select another ship and then that ship moves instead
+  ships_elem.classList.add('disable-pointer-events') // Disable pressing fx. the rotation buttons while the ship is rotating, to prevent a bug where the user clicks the rotate button twice
+
   if (ship.direction != 330) ship.direction += o_degrees
   else ship.direction = 30
   // array_offset = direction.indexOf(cur_direction)
@@ -367,6 +379,7 @@ function turn_clockwise() {
 
 
 function turn_counter_clockwise() {
+  ships_elem.classList.add('disable-pointer-events') // Disable ship selection while the move is ongoing to prevent a bug where one selects a ship, tells it to move/rotate and then select another ship and then that ship moves instead
 
   if (ship.direction != 30) ship.direction -= o_degrees
   else ship.direction = 330
@@ -378,6 +391,7 @@ function turn_counter_clockwise() {
 // TODO: I think it would be easier to decouple the rotation as received from Java from the visual representation of the rotation, as chaging the latter might not mean changing the former
 // It's async because we need to sleep while the ship rotates, before it moves and the best practice way of doing this is via a promise (in a thread)
 async function turn_visual(direction) {
+
   cur_direction = parseInt( ship.el.style.transform.match(/-?\d+/)[0] ) // NOTE: This works as long as I don't use transform for setting anything besides rotation. The last part extracts the first number from the string
 
   if (direction == "CW") {
@@ -389,9 +403,9 @@ async function turn_visual(direction) {
 
   //TODO: BUG!: When await is called you can select a ship, press to rotate, then select another ship before sleep is over, and the newly selected ship moves instead.
   // Ideally we'd suspend all event handlers here until it's over. We can't lock up the UI with busy wait because then it stops the CSS rotation as well.
-  if (ship.type != 'man-at-war') await sleep(1700); // Set to whatever the transition duration is (ie. the time it takes to rotate).
+  if (ship.type != 'Man at War') await sleep(1700); // Set to whatever the transition duration is (ie. the time it takes to rotate).
 
-  move()
+  move() // Based on the rules: Turning within a single hex should not be possible?
 }
 
 // Helper method for one of our ways of visually turning a ship
@@ -451,14 +465,12 @@ function clear_attack_mode() {
 
 function attack(tile_attacked) {
 
-  // TODO: Just enter Attack mode and wait for a left click on a tile to fire, or right click anywhere to cancel
-  // alert('Attacking...')
   ship.load = 2 // It will be decremented by 1 at the start of the next round, making it reach 0 after two "end turns"
   display_current_ammunition() // Update this as ship.load is now above 0, no longer ready to fire
   clear_attack_mode()
   highlight_attack_tile(event.target, false)
 
-  // Find the coordinates of the targetted tile
+  // Find the coordinates of the targeted tile
   targeted_tile = null
   for (aTile of tiles) {
     if (aTile.el == tile_attacked) targeted_tile = aTile 
@@ -470,18 +482,18 @@ function attack(tile_attacked) {
   
 }
 
-// This was just quickly implemented as a demonstration. Obviously > 10 is not a sufficient criterion as it will then become impervious to damage if it reaches fx. 9.
+// TODO: This was just quickly implemented as a demonstration. Obviously > 10 is not a sufficient criterion as it will then become impervious to damage if it reaches fx. 9.
 function damage_ship(current_ship, target_ship) {
   // Damage modifier based on the shiptype attacking
-  if (current_ship.type == 'brig') damage_modifier = 10
-  else if (current_ship.type == 'ship-of-the-line') damage_modifier = 20
-  else if (current_ship.type == 'man-at-war') damage_modifier = 30
+  if (current_ship.type == 'Brig') damage_modifier = 10
+  else if (current_ship.type == 'Ship of the Line') damage_modifier = 20
+  else if (current_ship.type == 'Man at War') damage_modifier = 30
 
-  if (target_ship.hull_health > 10) { // If 0 destroy the ship
+  if (target_ship.hullHealth > 10) { // If 0 destroy the ship
 
-    target_ship.hull_health -= Math.random() * damage_modifier
+    target_ship.hullHealth -= Math.random() * damage_modifier
     if (target_ship.sailors > 10) target_ship.sailors -= Math.random() * damage_modifier // Don't go to negative values
-    if (target_ship.sail_health > 10) target_ship.sail_health -= Math.random() * damage_modifier
+    if (target_ship.sailHealth > 10) target_ship.sailHealth -= Math.random() * damage_modifier
   }
   else destroy_ship(target_ship, true)
 }
@@ -493,7 +505,6 @@ function destroy_ship(aShip, sink) {
   if (sink) play_sfx(base_path, sounds_sink)
 }
 
-// TODO: Add turn-based delays to this
 function update_ammunition(ammo_clicked) {
 
   if (ship.load == 0) {

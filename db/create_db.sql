@@ -45,9 +45,9 @@ CREATE TABLE ships (
   nationality VARCHAR(60) NOT NULL,  -- Which player controls this ship
   row INT NOT NULL,       -- Starting coordinates
   col INT NOT NULL,
-  direction TINYINT NOT NULL,    -- The direction it's facing at the start
+  direction INT NOT NULL,    -- The direction it's facing at the start
 
-  CHECK (direction BETWEEN 0 AND 5), -- matching the enum numbers, which are zero indexed
+  CHECK (direction BETWEEN 30 AND 330),
   FOREIGN KEY (scenario) REFERENCES scenarios(name),
   FOREIGN KEY (type) REFERENCES ship_types(name),
   FOREIGN KEY (nationality) REFERENCES nationalities(name)

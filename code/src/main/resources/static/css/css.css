@@ -105,9 +105,7 @@ button:hover {
   background-position: center center;
   height: 120px;
   width: 120px;
-  /* pointer-events: inherit; */ /* seems to be default anyway? */
-  position: absolute;
-  /* Actually positioned via JS */
+  position: absolute; /* Actually positioned via JS */
   transition: transform 2s, border 0s, left 1.7s, top 1.7s;
   z-index: 3;
 }
