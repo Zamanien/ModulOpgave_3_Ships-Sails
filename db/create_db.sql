@@ -43,14 +43,14 @@ CREATE TABLE ships (
   id INT PRIMARY KEY AUTO_INCREMENT,
   type VARCHAR(60) NOT NULL,             -- the ship type
   nationality VARCHAR(60) NOT NULL,  -- Which player controls this ship
-  row INT NOT NULL,       -- Starting coordinates
+  `row` INT NOT NULL,       -- Starting coordinates
   col INT NOT NULL,
   direction INT NOT NULL,    -- The direction it's facing at the start
 
-  CHECK (direction BETWEEN 30 AND 330),
   FOREIGN KEY (scenario) REFERENCES scenarios(name),
   FOREIGN KEY (type) REFERENCES ship_types(name),
-  FOREIGN KEY (nationality) REFERENCES nationalities(name)
+  FOREIGN KEY (nationality) REFERENCES nationalities(name),
+  CHECK (direction BETWEEN 30 AND 330)
   --  sailors INT NOT NULL,        -- only relevant if one wants a ship to be able to start with a limited crew
   -- name VARCHAR(60) UNIQUE,       -- Basically a custom name for the ship. Should these even be in the database, or just user configurable in java?
   -- sails INT NOT NULL,            -- Starts at 100 for any ship, or directly derived from ship type

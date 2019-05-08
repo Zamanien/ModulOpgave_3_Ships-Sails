@@ -49,7 +49,7 @@ const ship3 = new Ship( null, 3, 3, 4, 330, "Man at War", "Aztec" )
 const ship4 = new Ship( null, 5, 1, 7, 330, "Man at War", "Celts" ) // The enemy!
 
 // Comment this line to load ships from Java instead (which only partially works)
-// ships = [ship1, ship2, ship3, ship4]
+//ships = [ship1, ship2, ship3, ship4]
 
 // TODO: Hardcoded which nationality the player is for now, just for testing
 player = "Aztec"
@@ -60,6 +60,8 @@ attack_mode = false
 
 
 /* SETTINGS */
+
+turn_number = 0
 
 // Music
 
@@ -227,9 +229,11 @@ function music_toggle() {
   
 // TODO: Prevent ending the turn if there's moves you have to make left, due to speed
 function end_turn() {
-  alert('Ending turn...')
   for (aShip of ships) if (aShip.load != 0) aShip.load--
-  display_current_ammunition() // The ammunition might be loaded now, so the UI should show it
+  if (ship) display_current_ammunition() // The ammunition might be loaded now, so the UI should show it if any ship is selected
+
+  turn_number++
+  document.getElementById('turn-number').childNodes[1].childNodes[1].innerHTML = turn_number
 }
 
 
@@ -316,17 +320,19 @@ function move() {
     }
 
     if (ship.row < 0 || ship.col < 0 || ship.row > height-1 || ship.col > width-1) move_over_edge()
-    update_selected_tile()
-    play_sfx_affirmative()
+    else {
+      update_selected_tile()
+      play_sfx_affirmative()
 
-    // Moving based off updated coordinates. Almost verbatim copy of the "placing ships algorithm" (changed aShip to ship), so if all this works I should extract this to a method
-    for (aTile of tiles) {
-      if (aTile.row == ship.row && aTile.col == ship.col) {
-        let cb = document.getElementById("tiles").getBoundingClientRect();
-        let coords = aTile.el.getBoundingClientRect();
-        ship.el.style.left = (coords.left - cb.left + 10) + "px" // The last value was adjusted manually to move the ship from the edge of the tile to the center
-        ship.el.style.top  = (coords.top - cb.top) + "px"
-        break
+      // Moving based off updated coordinates. Almost verbatim copy of the "placing ships algorithm" (changed aShip to ship), so if all this works I should extract this to a method
+      for (aTile of tiles) {
+        if (aTile.row == ship.row && aTile.col == ship.col) {
+          let cb = document.getElementById("tiles").getBoundingClientRect();
+          let coords = aTile.el.getBoundingClientRect();
+          ship.el.style.left = (coords.left - cb.left + 10) + "px" // The last value was adjusted manually to move the ship from the edge of the tile to the center
+          ship.el.style.top  = (coords.top - cb.top) + "px"
+          break
+        }
       }
     }
     ships_elem.classList.remove('disable-pointer-events') // Re-enable ship selection after the move has finished
@@ -485,17 +491,16 @@ function attack(tile_attacked) {
 // TODO: This was just quickly implemented as a demonstration. Obviously > 10 is not a sufficient criterion as it will then become impervious to damage if it reaches fx. 9.
 function damage_ship(current_ship, target_ship) {
   // Damage modifier based on the shiptype attacking
-  if (current_ship.type == 'Brig') damage_modifier = 10
-  else if (current_ship.type == 'Ship of the Line') damage_modifier = 20
-  else if (current_ship.type == 'Man at War') damage_modifier = 30
-
-  if (target_ship.hullHealth > 10) { // If 0 destroy the ship
+  if (current_ship.type == 'Brig') damage_modifier = 20
+  else if (current_ship.type == 'Ship of the Line') damage_modifier = 30
+  else if (current_ship.type == 'Man at War') damage_modifier = 40
 
     target_ship.hullHealth -= Math.random() * damage_modifier
     if (target_ship.sailors > 10) target_ship.sailors -= Math.random() * damage_modifier // Don't go to negative values
     if (target_ship.sailHealth > 10) target_ship.sailHealth -= Math.random() * damage_modifier
-  }
-  else destroy_ship(target_ship, true)
+
+    // If hull health is less than 0, destroy the ship
+    if (target_ship.hullHealth <= 0) destroy_ship(target_ship, true)
 }
 
 function destroy_ship(aShip, sink) {

@@ -30,6 +30,14 @@ h2 {
   z-index: 2;
 }
 
+/* Turn number */
+#turn-number {
+  position: fixed;
+  top: 40px;
+  left: 18px;
+  font-size: 35px;
+}
+
 /* Buttons */
 
 .buttons span {
