@@ -49,7 +49,7 @@ const ship3 = new Ship( null, 3, 3, 4, 330, "Man at War", "Aztec" )
 const ship4 = new Ship( null, 5, 1, 7, 330, "Man at War", "Celts" ) // The enemy!
 
 // Comment this line to load ships from Java instead (which only partially works)
-//ships = [ship1, ship2, ship3, ship4]
+ships = [ship1, ship2, ship3, ship4]
 
 // TODO: Hardcoded which nationality the player is for now, just for testing
 player = "Aztec"
@@ -61,7 +61,7 @@ attack_mode = false
 
 /* SETTINGS */
 
-turn_number = 0
+turn_number = 1
 
 // Music
 
@@ -514,7 +514,7 @@ function update_ammunition(ammo_clicked) {
 
   if (ship.load == 0) {
     alert("The cannon is already loaded. Fire it to be able to reload.")
-    return
+    return // Not really necessary as it stands, but...
   }
   else if (ship.currentAmmunitionType == ammo_clicked) return // Don't do anything if clicking the currently selected ammunition
   else {
